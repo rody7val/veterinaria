@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="text-h6 q-mb-md">Entradas</div>
+    <div class="text-overline q-mb-md">Entradas</div>
     <Entradas :items="items" :onLoad="onLoad"/>
   </div>
 </template>

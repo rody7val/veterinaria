@@ -4,12 +4,14 @@ import VuexEasyFirestore from 'vuex-easy-firestore'
 import fb from '../services/firebase'
 
 import clientes from './clientes'
+import pacientes from './pacientes'
+import entradas from './entradas'
 
 Vue.use(Vuex)
 
 // do the magic 🧙🏻‍♂️
 const easyFirestore = VuexEasyFirestore(
-  [clientes],
+  [clientes, pacientes, entradas],
   {logging: true, FirebaseDependency: fb.firebase}
 )
 
@@ -23,31 +25,175 @@ export default function (/* { ssrContext } */) {
     //modules: { clientes },
 
     state: {
-      paginationBlock: 7,
+      drawer: false,
+      drawerRight: false,
+      modal: false,
+      
+      form: false,
+      idEdit: '',
+
+      tab: 'clientes',
+      cliente: null,
+      paciente: null,
+      entrada: null,
+
+      typeView: '',
+      toggle: false,
+      search: '',
+      date: { from: '', to: '' },
+      pagination: 3,
+
+      user: null,
+
+      localeEsp: {
+        /* starting with Sunday */
+        days: 'Domingo_Lunes_Martes_Miércoles_Jueves_Viernes_Sábado'.split('_'),
+        daysShort: 'Dom_Lun_Mar_Mié_Jue_Vie_Sáb'.split('_'),
+        months: 'Enero_Febrero_Marzo_Abril_Mayo_Junio_Julio_Agosto_Septiembre_Octubre_Noviembre_Diciembre'.split('_'),
+        monthsShort: 'Ene_Feb_Mar_Abr_May_Jun_Jul_Ago_Sep_Oct_Nov_Dic'.split('_'),
+        firstDayOfWeek: 1, // 0-6, 0 - Sunday, 1 Monday, ...
+        format24h: true,
+        pluralDay: 'dias'
+      }
     },
 
     mutations: {
-      handleDoneClientes(state, id) {
-        state.clientes.data[id].done = !state.clientes.data[id].done
+      //view
+      setTypeView(state, type) {
+        state.typeView = type
       },
-      pushPaginationBlock(state, qty) {
-        if(state.paginationBlock + qty > Object.keys(state.clientes.data).length){
-          state.paginationBlock = Object.keys(state.clientes.data).length
+      setCliente(state, cliente) {
+        state.cliente = cliente
+      },
+      setPaciente(state, paciente) {
+        state.paciente = paciente
+      },
+      setEntrada(state, entrada) {
+        state.entrada = entrada
+      },
+      //toggle
+      toggleSearch(state, toggle) {
+        state.toggle = toggle
+      },
+      //search
+      setSearch(state, search) {
+        state.search = search
+      },
+      //date
+      setDate(state, date) {
+        state.date = date
+      },
+      //tab
+      setTab(state, tab) {
+        state.tab = tab
+      },
+      //drawer
+      setDrawer(state, drawer) {
+        state.drawer = drawer
+      },
+      setDrawerRight(state, drawer) {
+        state.drawerRight = drawer
+      },
+      //modal
+      setModal(state, modal) {
+        state.modal = modal
+      },
+      //form
+      setForm(state, form) {
+        state.form = form
+      },
+      //id Edit
+      setIdEdit(state, id) {
+        state.idEdit = id
+      },
+      //handle done
+      handleDone(state, {type, id}) {
+        state[type].data[id].done = !state[type].data[id].done
+      },
+      resetPagination(state) {
+        state.pagination = 3
+      },
+      resetSearch(state) {
+        state.search = ""
+      },
+      resetDate(state, date) {
+        state.date = date
+      },
+      pushPagination(state, {type, qty}) {
+        if(state.pagination + qty > Object.keys(state[type].data).length){
+          state.pagination = Object.keys(state[type].data).length
         }
-        state.paginationBlock = state.paginationBlock + qty
+        state.pagination = state.pagination + qty
       }
     },
 
     getters: {
-      clientes: state => {
-        //ultimos 7
-        return Object.values(state.clientes.data).slice(0).slice(-state.paginationBlock).reverse()
-      },
-      getClientesByName: (state) => (search) => {
-        return Object.values(state.clientes.data).filter(item => {
-          return item.name.toLowerCase().includes(search.toLowerCase())
+      //clientes
+      clientes: state => {//order by name
+        //ultimos
+        return Object.values(state.clientes.data)
+        .sort( ( a, b) => {
+          return new Date(a.created_at.seconds*1000) - new Date(b.created_at.seconds*1000)
         })
+        .slice(0)
+        .slice(-state.pagination).reverse()
       },
+      getClientesByName: (state) => {//search by name
+        return Object.values(state.clientes.data)
+        .filter(item => {
+          if (item.name) {
+            return item.name.toLowerCase().includes(state.search.toLowerCase())
+          }
+        })
+        .sort( ( a, b) => {
+          return new Date(a.created_at.seconds*1000) - new Date(b.created_at.seconds*1000)
+        })
+        .slice(0)
+        .slice(-state.pagination).reverse()
+      },
+      getClientesByRangeDate: (state) => {//order by created_at
+        return Object.values(state.clientes.data)
+        .filter((item, index) => {
+          if (state.date && state.date.from) {
+            let date = new Date(item.created_at.seconds*1000)
+            let from = new Date(state.date.from.split("/").reverse().join("/"))
+            let to = new Date(state.date.to.split("/").reverse().join("/"))
+            return date >= from && date <= to
+          }
+        })
+        .sort( ( a, b) => {
+          return new Date(a.created_at.seconds*1000) - new Date(b.created_at.seconds*1000)
+        })
+        .slice(0)
+        .slice(-state.pagination).reverse()
+      },
+      //pacientes
+      pacientes: state => {
+        //ultimos 7
+        return Object.values(state.pacientes.data)
+        .slice(0)
+        .slice(-state.pagination).reverse()
+      },
+      getPacientesByName: (state) => {
+        return Object.values(state.pacientes.data).filter(item => {
+          if (item.name) {
+            return item.name.toLowerCase().includes(state.search.toLowerCase())
+          }
+        })
+        .slice(0)
+        .slice(-state.pagination).reverse()
+      },
+      getPacientesByDate: (state) => {
+        return Object.values(state.pacientes.data).filter((item, index) => {
+          let date = new Date(item.created_at.seconds*1000)
+          let from = new Date(state.date.from.split("/").reverse().join("/"))
+          let to = new Date(state.date.to.split("/").reverse().join("/"))
+          return date >= from && date <= to
+        })
+        .slice(0)
+        .slice(-state.pagination).reverse()
+      },
+
     }
     // enable strict mode (adds overhead!)
     // for dev mode only

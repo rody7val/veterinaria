@@ -8,17 +8,19 @@
         position: absolute;
       "
     >
-      <q-header elevated class="bg-accent">
+      <q-header elevated class="q-pa-xs bg-accent">
         <q-toolbar>
-          <q-avatar>
+          <q-avatar class="shadow-3">
             <img src="../assets/logo-central-vet.jpg">
           </q-avatar>
 
-          <q-toolbar-title>
+          <q-toolbar-title class="text-shadow-3">
             Central Vet
           </q-toolbar-title>
 
           <q-btn
+            dense
+            size="md"
             color="white"
             text-color="accent"
             icon="account_circle"

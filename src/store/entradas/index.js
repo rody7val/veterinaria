@@ -3,9 +3,9 @@
 //import actions from './actions'
 
 export default {
-  firestorePath: 'clientes',
+  firestorePath: 'entradas',
   firestoreRefType: 'collection', // or 'doc'
-  moduleName: 'clientes',
+  moduleName: 'entradas',
   statePropName: 'data',
   namespaced: false,
   sync: {
