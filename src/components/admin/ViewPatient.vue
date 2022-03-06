@@ -37,7 +37,7 @@
     <div class="text-overline text-grey q-pl-md">Paciente</div>
     <q-item class="q-pt-none">
       <q-item-section avatar >
-        <div class="text-teal" style="font-size: 2.5rem">
+        <div class="text-grey-8" style="font-size: 2.5rem">
           {{$store.state.paciente.dog === "Perro" ? "🐶" : "🐱"}}
         </div>
       </q-item-section>
@@ -53,7 +53,7 @@
     </q-item>
 
     <div class="q-px-lg"  v-if="$store.state.paciente.birthday">
-      <span class="text-teal">
+      <span class="text-grey-8">
         🎂 
       </span>
       <span class="text-grey-9 q-pl-sm">
@@ -99,10 +99,17 @@
         />
       </q-card-actions>
 
-      <Entradas
+      <Entradas v-if="entradasView.length > 0"
         :entradas="entradasView"
         :handleDone="handleDoneEntradas"
       />
+      <div v-else class="text-center q-my-lg">
+        <q-spinner
+          color="primary"
+          size="2em"
+        />
+        cargando...
+      </div>
     </q-list>
   </q-scroll-area>
 </template>
@@ -118,6 +125,9 @@ export default {
     entradasView() {
       return Object.values(this.$store.state.entradas.data).filter(item => {
         return item.idPaciente === this.$store.state.paciente.id
+      })
+      .sort( ( a, b) => {
+        return new Date(a.created_at.seconds*1000) - new Date(b.created_at.seconds*1000)
       }).reverse()
     }
   },
@@ -126,9 +136,9 @@ export default {
       this.$store.commit('setModal', !this.$store.state.modal)
       this.$store.commit('setForm', 'newEntrada')
     },
-    handleDoneEntradas(id) {
+    handleDoneEntradas(type, id) {
       // switch checkbox store entradas.done
-      this.$store.commit('handleDoneEntradas', id)
+      this.$store.commit('handleDone', {type, id})
     },
     modalEdit(){
       this.$store.commit('setModal', !this.$store.state.modal)

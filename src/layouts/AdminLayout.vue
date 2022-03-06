@@ -1,6 +1,6 @@
 <template>
-  <q-layout view="lHh Lpr lFf">
-    <q-header elevated class="bg-accent">
+  <q-layout view="lHh Lpr lFf" class="bg-grey-3">
+    <q-header elevated class="bg-grey-8">
       <q-toolbar>
         <q-btn
           flat
@@ -12,7 +12,7 @@
         />
 
         <q-toolbar-title>
-          Central Vet
+          {{$store.state.title}}
         </q-toolbar-title>
         
         <q-btn flat dense icon="account_circle">
@@ -46,17 +46,19 @@
       </q-toolbar>
     </q-header>
 
+    <!--menu-->
     <MenuAdmin
       :drawerHandler="drawerHandler"
       :sistemLinks="sistemLinks"
       :adminLinks="adminLinks"
     />
 
+    <!--drawerRight-->
     <q-drawer
       side="right"
       v-model="$store.state.drawerRight"
       bordered
-      class="bg-red"
+      class="bg-red _list"
     >
       <ViewClient
         v-if="$store.state.typeView === 'cliente'"
@@ -90,6 +92,7 @@
           v-if="$store.state.form === 'deleteCliente'"
           title="Eliminar Cliente"
         />
+
         <!--pacientes-->
         <newPaciente
           v-if="$store.state.form === 'newPaciente'"
@@ -103,6 +106,7 @@
           v-if="$store.state.form === 'deletePaciente'"
           title="Eliminar Paciente"
         />
+
         <!--entradas-->
         <newEntrada
           v-if="$store.state.form === 'newEntrada'"
@@ -187,6 +191,19 @@ export default {
     deleteEntrada
   },
 
+  watch: {
+    $route (to, from) {
+      let titleHome = 'CentralVet'
+      let titleAdmin = 'Administración'
+      if (to.path.match('/')) {
+        //console.log(to.path, titleHome)
+        return this.$store.commit('setTitle', titleHome)
+      }
+      //console.log(to.path, titleAdmin)
+      return this.$store.commit('setTitle', titleAdmin)
+    }
+  },
+
   methods: {
     drawerRightHandler() {
       this.$store.commit('setDrawerRight', !this.$store.state.drawerRight)
@@ -211,7 +228,7 @@ export default {
     },
     drawerHandler() {
       this.$store.commit('setDrawer', !this.$store.state.drawer)
-    }
+    },
   },
 
   computed: {
@@ -232,7 +249,6 @@ export default {
 
 <style lang="css">
 body{
-  background-color: #e0e0e0
 }
 .ellipsis {
   text-overflow: ellipsis;

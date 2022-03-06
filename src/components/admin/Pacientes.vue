@@ -1,28 +1,21 @@
 <template>
-  <div>
-  <!--<q-infinite-scroll @load="onLoad">
-    <template v-slot:loading>
-      <div class="row justify-center q-my-md">
-        <q-spinner color="teal" name="dots" size="40px" />
-      </div>
-    </template>
-  </q-infinite-scroll>-->
-
+  <q-list>
     <q-card flat bordered
       v-for="(item, index) in pacientes"
       :key="index"
     >
       <q-item
-        :class="`q-py-none ${item.done ? ' done bg-purple-1 ' : ''}`"
-        @click="handleDone(item.id)"
+        @click="handleDone('pacientes', item.id)"
+        :class="{'done bg-purple-1': item.done}"
+        clickable
         v-ripple
       >
-        <q-item-section avatar >
+        <q-item-section avatar v-if="item.done">
           <q-checkbox color="accent" v-model="item.done"/>
         </q-item-section>
 
         <q-item-section avatar>
-          <div class="text-teal" style="font-size: 3rem">
+          <div class="text-grey-8" style="font-size: 3rem">
             {{item.dog === "Perro" ? "🐶" : "🐱"}}
           </div>
         </q-item-section>
@@ -32,6 +25,13 @@
           <q-item-label caption class="ellipsis">
             {{item.dog}} - {{item.feme}}
           </q-item-label>
+        </q-item-section>
+
+        <q-item-section>
+          <q-item-label caption>
+            Cliente
+          </q-item-label>
+          <q-item-label>{{getClientName(item.idCliente)}}</q-item-label>
         </q-item-section>
 
         <q-item-section v-if="item.done" side>
@@ -45,7 +45,7 @@
       </q-item>
 
     </q-card>
-  </div>
+  </q-list>
 </template>
 
 <script>
@@ -61,6 +61,9 @@ export default {
     },
     getFormatDate(time, format) {
       return date.formatDate(time, format, this.$store.state.localeEsp)
+    },
+    getClientName(id) {
+      return this.$store.state.clientes.data[id].name
     },
   },
 

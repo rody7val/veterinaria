@@ -1,14 +1,18 @@
 <template>
   <div class="_clinic">
     <q-splitter
+      :value="15"
       class="_splitter"
-      v-model="splitterModel"
+      :vertical="handleTabOrientationGtSm"
+      :horizontal="!handleTabOrientationGtSm"
     >
+      <!--tabs /admin/clinic-->
       <template v-slot:before>
         <q-tabs
+          style="height: auto!important"
           v-model="$store.state.tab"
-          vertical
-          class="text-teal bg-grey-3"
+          class="text-grey-8 bg-grey-3"
+          :vertical="handleTabOrientationGtSm"
         >
           <q-tab
             name="clientes"
@@ -31,90 +35,103 @@
         </q-tabs>
       </template>
 
+      <!--tabs data views-->
       <template v-slot:after>
-        <div class="_search">
-          <!--toggle-->
-          <q-toggle
-            v-model="$store.state.toggle"
-            :icon="$store.state.toggle ? 'date_range' : 'T'"
-            :label="$store.state.toggle ? 'Por fecha' : 'Por nombre'"
-            color="accent"
-            size="lg"
-          />
+        <q-scroll-area style="height: 100%; max-width: 100%;">
 
-          <!--search text-->
-          <q-input
-            v-if="!$store.state.toggle"
-            v-model="$store.state.search"
-            @input="onInput"
-            class="q-mx-md"
-            color="accent"
-            label="Nombre"
-            filled
-          >
-            <template v-slot:append>
-              <q-icon name="search" />
-            </template>
-          </q-input>
+          <div class="_search">
+            <!--toggle name/date-->
+            <q-toggle v-if="$store.state.tab === 'entradas'"
+              :value="true"
+              icon="date_range"
+              label="Por fecha"
+              color="accent"
+              size="lg"
+              disabled
+            />
+            <q-toggle v-else
+              v-model="$store.state.toggle"
+              :icon="$store.state.toggle ? 'date_range' : 'T'"
+              :label="$store.state.toggle ? 'Por fecha' : 'Por nombre'"
+              color="accent"
+              size="lg"
+            />
+            <!--search text-->
+            <q-input
+              v-if="!$store.state.toggle"
+              v-model="$store.state.search"
+              @input="onInput"
+              class="q-mx-md"
+              color="accent"
+              label="Nombre"
+              filled
+              autofocus
+            >
+              <template v-slot:append>
+                <q-icon name="search" />
+              </template>
+            </q-input>
+            <!--search date-->
+            <q-input
+              v-else 
+              :value="getDate"
+              class="q-mx-md"
+              color="accent"
+              label="Fecha"
+              filled
+            >
+              <template v-slot:append>
+                <q-icon name="event" class="cursor-pointer" color="accent">
+                  <q-popup-proxy transition-show="scale" transition-hide="scale">
+                    <q-date
+                      color="accent"
+                      v-model="$store.state.date"
+                      :locale="$store.state.localeEsp"
+                      mask="DD/MM/YYYY" 
+                      range
+                    >
+                      <div class="row items-center justify-end">
+                        <q-btn
+                          v-close-popup
+                          label="ok"
+                          color="pink"
+                          flat
+                        />
+                      </div>
+                    </q-date>
+                  </q-popup-proxy>
+                </q-icon>
+              </template>
+            </q-input>
+          </div>
 
-          <!--search date-->
-          <q-input
-            v-else 
-            :value="getDate"
-            class="q-mx-md"
-            color="accent"
-            label="Fecha"
-            filled
-          >
-            <template v-slot:append>
-              <q-icon name="event" class="cursor-pointer" color="accent">
-                <q-popup-proxy transition-show="scale" transition-hide="scale">
-                  <q-date
-                    color="accent"
-                    v-model="$store.state.date"
-                    :locale="$store.state.localeEsp"
-                    mask="DD/MM/YYYY" 
-                    range
-                  >
-                    <div class="row items-center justify-end">
-                      <q-btn
-                        v-close-popup
-                        label="ok"
-                        color="pink"
-                        flat
-                      />
-                    </div>
-                  </q-date>
-                </q-popup-proxy>
-              </q-icon>
-            </template>
-          </q-input>
+          <div class="_list">
+            <!--list views-->
+            <q-tab-panels
+              class="bg-grey-2"
+              v-model="$store.state.tab"
+              animated
+              swipeable
+              vertical
+              transition-prev="jump-up"
+              transition-next="jump-up"
+            >
+              <q-tab-panel name="clientes">
+                <ClientesPage/>
+              </q-tab-panel>
 
-          <!--list views-->
-          <q-tab-panels
-            class="bg-grey-2"
-            v-model="$store.state.tab"
-            animated
-            swipeable
-            vertical
-            transition-prev="jump-up"
-            transition-next="jump-up"
-          >
-            <q-tab-panel name="clientes">
-              <ClientesPage/>
-            </q-tab-panel>
+              <q-tab-panel name="pacientes">
+                <PacientesPage/>
+              </q-tab-panel>
 
-            <q-tab-panel name="pacientes">
-              <PacientesPage/>
-            </q-tab-panel>
+              <q-tab-panel name="entradas">
+                <EntradasPage/>
+              </q-tab-panel>
+            </q-tab-panels>
+          </div>
 
-            <q-tab-panel name="entradas">
-              <EntradasPage/>
-            </q-tab-panel>
-          </q-tab-panels>
-        </div>
+        </q-scroll-area>
       </template>
-
     </q-splitter>
   </div>
 </template>
@@ -130,36 +147,49 @@ export default {
     PacientesPage,
     EntradasPage
   },
+
   computed: {
     getDate() {
       return this.$store.state.date && this.$store.state.date.from && this.$store.state.date.from.length > 0
         ? `${this.$store.state.date.from} - ${this.$store.state.date.to}`
         : "Selecciona un rango"
+    },
+    handleTabOrientationGtSm () {
+      return this.$q.screen.gt.xs
+        ? true
+        : false
     }
   },
+
   methods: {
-    handleDate() {},
     onInput(e) {
       this.$store.commit('setSearch', e)
     },
   },
+
   data () {
     return {
       tab: 'clientes',
-      splitterModel: 20
     }
   }
 }
 </script>
 
 <style type="text/css">
-._search .q-input{
-  max-width: 300px;
+.q-splitter__before{
+  height: auto!important;
 }
 ._clinic{
   position: absolute;
-  height: calc(100% - 50px);
+  height: calc(100% - 53px);
+  overflow-y: hidden!important;
   width: 100%;
+}
+._search .q-input{
+  max-width: 300px;
+}
+._list .q-card{
+  border-radius: 0px;
 }
 .tab,._splitter{
   height: 100%

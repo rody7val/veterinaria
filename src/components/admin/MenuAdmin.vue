@@ -14,7 +14,10 @@
             <q-avatar size="md" class="shadow-3 q-mr-md">
               <img src="../../assets/logo-central-vet.jpg">
             </q-avatar>
-            <div>Administración</div>
+            <div>
+              CentralVet<br>
+              <small class="text-grey-6">M.V. Guillermina Puente</small>
+            </div>
             <q-space/>
             <q-btn
               flat

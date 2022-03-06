@@ -1,38 +1,37 @@
 <template>
-  <div>
-  <!--<q-infinite-scroll @load="onLoad">
-    <template v-slot:loading>
-      <div class="row justify-center q-my-md">
-        <q-spinner color="teal" name="dots" size="40px" />
-      </div>
-    </template>
-  </q-infinite-scroll>-->
-
+  <q-list>
     <q-card flat bordered
       v-for="(item, index) in entradas"
       :key="index"
     >
       <q-item
+        @click="handleDone('entradas', item.id)"
         :class="{'done bg-purple-1': item.done}"
-        @click="handleDone(item.id)"
+        clickable
         v-ripple
       >
-        <q-item-section avatar >
+        <q-item-section avatar v-if="item.done">
           <q-checkbox color="accent" v-model="item.done"/>
         </q-item-section>
 
         <q-item-section avatar>
           <q-icon
             name="assignment"
-            color="teal"
+            color="grey-8"
             size="3rem"
           />
         </q-item-section>
 
         <q-item-section>
-          <q-item-label>{{getFormatDate(item.created_at.seconds*1000, "D MMMM/YYYY")}}</q-item-label>
-          <q-item-label caption class="ellipsis" v-html="item.desc"> 
+          <q-item-label class="ellipsis" v-html="item.desc"> 
           </q-item-label>
+        </q-item-section>
+
+        <q-item-section>
+          <q-item-label caption>
+            Creado
+          </q-item-label>
+          <q-item-label>{{getFormatDate(item.created_at.seconds * 1000, "D MMMM/YY")}}</q-item-label>
         </q-item-section>
 
         <q-item-section v-if="item.done" side>
@@ -46,7 +45,7 @@
       </q-item>
 
     </q-card>
-  </div>
+  </q-list>
 </template>
 
 <script>

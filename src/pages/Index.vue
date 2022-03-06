@@ -1,6 +1,8 @@
 <template>
-  <div class="q-pa-md bg-white">
-    Veterinaria
+  <div class="q-px-lg q-pt-sm bg-white">
+    <div class="text-overline text-grey">
+      <p>Página web</p>
+    </div>
   </div>
 </template>
 

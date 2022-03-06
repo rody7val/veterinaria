@@ -1,6 +1,7 @@
-import firebase from 'firebase/compat/app';
-import 'firebase/compat/auth';
-import 'firebase/compat/firestore';
+import firebase from 'firebase/compat/app'
+import 'firebase/compat/auth'
+import 'firebase/compat/storage'
+import 'firebase/compat/firestore'
 
 const init = async (config) => {
   firebase.initializeApp(config)
@@ -18,6 +19,34 @@ const init = async (config) => {
           // the features required to enable persistence
         }
       })
+  })
+}
+
+const storage = async (file, ref, commit, cb) => {
+  return new Promise((resolve, reject) => {
+    let uploadTask = firebase.storage().ref().child(ref).put(file)
+    uploadTask.on(
+      "state_changed", snapshot => {
+        var progress = Number(
+          Number(
+            snapshot.bytesTransferred / snapshot.totalBytes
+          ).toFixed(2)
+        )
+        console.log('Upload is ' + progress + '% done', typeof progress)
+        commit("setProgress", progress)
+      }, error => {
+        reject(error)
+      },() => {
+        uploadTask.snapshot.ref
+        .getDownloadURL()
+        .then((downloadURL) => {
+          console.log("Uploaded a blob or file!")
+          console.log("got downloadURL: ", downloadURL)
+          cb(downloadURL)
+          resolve(downloadURL)
+        })
+      }
+    )
   })
 }
 
@@ -77,6 +106,7 @@ export default {
   init,
   auth,
   getAuth,
+  storage,
   //isAuthenticated,
   //handleOnAuthStateChanged,
   //ensureAuthIsInitialized

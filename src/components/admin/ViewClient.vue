@@ -23,7 +23,7 @@
     <!--view cliente-->
     <q-item class="q-pt-none">
       <q-item-section avatar>
-        <q-icon name="account_circle" color="teal" size="3rem" />
+        <q-icon name="account_circle" color="grey-8" size="3rem" />
       </q-item-section>
 
       <q-item-section>
@@ -37,7 +37,7 @@
     </q-item>
     
     <div class="q-px-lg" v-if="$store.state.cliente.dir">
-      <span class="text-teal">
+      <span class="text-grey-8">
         🏠 
       </span>
       <span class="text-grey-9 q-pl-sm">
@@ -83,10 +83,17 @@
         />
       </q-card-actions>
 
-      <Pacientes
+      <Pacientes v-if="pacientesView.length > 0"
         :pacientes="pacientesView"
         :handleDone="handleDonePacientes"
       />
+      <div v-else class="text-center q-my-lg">
+        <q-spinner
+          color="primary"
+          size="2em"
+        />
+        cargando...
+      </div>
     </q-list>
   </q-scroll-area>
 </template>
@@ -102,6 +109,9 @@ export default {
     pacientesView() {
       return Object.values(this.$store.state.pacientes.data).filter(item => {
         return item.idCliente === this.$store.state.cliente.id
+      })
+      .sort( ( a, b) => {
+        return new Date(a.created_at.seconds*1000) - new Date(b.created_at.seconds*1000)
       }).reverse()
     }
   },
@@ -110,9 +120,9 @@ export default {
       this.$store.commit('setModal', !this.$store.state.modal)
       this.$store.commit('setForm', 'newPaciente')
     },
-    handleDonePacientes(id) {
+    handleDonePacientes(type, id) {
       // switch checkbox store pacientes.done
-      this.$store.commit('handleDonePacientes', id)
+      this.$store.commit('handleDone', {type, id})
     },
     modalEdit(){
       this.$store.commit('setModal', !this.$store.state.modal)

@@ -1,22 +1,23 @@
 <template>
-  <div>
+  <q-list>
     <q-card flat bordered
       v-for="(item, index) in clientes"
       :key="index"
     >
       <q-item
+        @click="handleDone('clientes', item.id)"
         :class="{'done bg-purple-1': item.done}"
-        @click="handleDone(item.id)"
+        clickable
         v-ripple
       >
-        <q-item-section avatar >
+        <q-item-section avatar v-if="item.done">
           <q-checkbox color="accent" v-model="item.done"/>
         </q-item-section>
 
         <q-item-section avatar>
           <q-icon
             name="account_circle"
-            color="teal"
+            color="grey-8"
             size="3rem"
           />
         </q-item-section>
@@ -46,7 +47,7 @@
       </q-item>
 
     </q-card>
-  </div>
+  </q-list>
 </template>
 
 <script>

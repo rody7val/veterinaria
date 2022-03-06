@@ -6,53 +6,56 @@
       <q-btn icon="close" flat round dense v-close-popup />
     </q-card-section>
 
-    <form
-      @submit.prevent="onSubmit"
-      @reset.prevent="onReset"
-      class="q-gutter-md"
-     >
-      <q-card-section style="min-width: 350px">
-        <!--desc-->
-        <div class="text-overline">Descripción</div>
-        <q-editor
-          v-model="entry.desc"
-          :definitions="{
-            upload: {
-              tip: 'Upload to cloud',
-              icon: 'cloud_upload',
-              label: 'photo',
-              handler: uploadIt
-            }
-          }"
-          :toolbar="[
-            ['bold', 'italic', 'strike', 'underline'],
-            ['upload', 'save']
-          ]"
-          content-class="bg-grey-4"
-          :class="{'border-err': err}"
-        />
-        <!--err-->
-        <div class="q-pt-sm text-negative" v-if="err">
-          <div class="text-caption">Escribe algo</div>
-        </div>
-        <!--actions-->
-        <q-card-actions align="right">
-          <q-btn
-            class="q-mt-md q-ml-sm"
-            label="CANCELAR"
-            color="pink"
-            v-close-popup
+    <q-card-section>
+      <form
+        @submit.prevent="onSubmit"
+        @reset.prevent="onReset"
+        style="min-width: 350px"
+       >
+          <!--desc-->
+          <div class="text-overline">Descripción</div>
+          <q-editor
+            :class="{'border-err': err}"
+            content-class="bg-grey-4"
+            v-model="entry.desc"
+            :toolbar="[
+              ['bold', 'italic', 'strike', 'underline'],
+              ['upload']
+            ]"
+            :definitions="{
+              upload: {
+                tip: 'Subir archivo',
+                icon: 'cloud_upload',
+                label: 'FOTO/PDF',
+                handler: uploadIt
+              }
+            }"
           />
-          <q-btn
-            :loading="loading"
-            class="q-mt-md q-ml-sm"
-            label="REGISTRAR"
-            color="accent"
-            type="submit"
-          />
-        </q-card-actions>
-      </q-card-section>
-    </form>
+    
+          <!--err-->
+          <div class="q-pt-sm text-negative" v-if="err">
+            <div class="text-caption">Escribe algo</div>
+          </div>
+
+          <!--actions-->
+          <q-card-actions align="right">
+            <q-btn
+              class="q-mt-md q-ml-sm"
+              label="CANCELAR"
+              color="pink"
+              v-close-popup
+            />
+            <q-btn
+              :loading="loading"
+              class="q-mt-md q-ml-sm"
+              label="REGISTRAR"
+              color="accent"
+              type="submit"
+            />
+          </q-card-actions>
+      </form>
+    </q-card-section>
+
   </div>
 </template>
 
@@ -72,14 +75,6 @@ export default {
   },
 
   methods: {
-    uploadIt () {
-      this.$q.notify({
-        message: 'Server unavailable. Check connectivity.',
-        color: 'pink',
-        textColor: 'white',
-        icon: 'warning'
-      })
-    },
     onSubmit() {
       if (this.entry.desc == false) {
         this.formHasError = true

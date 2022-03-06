@@ -1,62 +1,102 @@
 <template>
   <div>
-    <div v-if="!$store.state.toggle">
-      <Pacientes 
-        :pacientes="!$store.state.search ? pacientes : getPacientesByName"
-        :handleDone="handleDone"
+    <q-card-actions
+      align="right"
+      class="q-pl-none q-pt-none"
+      v-if="pacientes.length > 0"
+    >
+      <q-btn
+        icon="add_circle"
+        label="NUEVO PACIENTE"
+        color="accent"
+        @click="modalNewPatient()"
       />
+    </q-card-actions>
+
+    <div v-if="pacientes.length > 0">
+      <div v-if="!$store.state.toggle">
+        <Pacientes v-if="getPacientesByName.length > 0"
+          :pacientes="!$store.state.search ? pacientes : getPacientesByName"
+          :handleDone="handleDone"
+        />
+        <div v-else>Sin resultados</div>
+      </div>
+
+      <div v-if="$store.state.toggle">
+        <Pacientes v-if="getPacientesByRangeDate.length > 0"
+          :pacientes="$store.state.date && $store.state.date.from && $store.state.date.from.length > 0 ? getPacientesByRangeDate : pacientes"
+          :handleDone="handleDone"
+        />
+        <div v-else>Sin resultados</div>
+      </div>
+
+      <q-card-actions align="right" class="q-pl-none">
+        <q-btn
+          color="primary"
+          icon="arrow_drop_down"
+          label="Más resultados"
+          @click="loadBlock"
+        />
+        <q-btn
+          color="pink"
+          icon="refresh"
+          label="Reset"
+          @click="resetBlock"
+        />
+      </q-card-actions>
     </div>
 
-    <div v-if="$store.state.toggle">
-      <Pacientes
-        :pacientes="$store.state.date && !$store.state.date.from ? pacientes : getPacientesByDate"
-        :handleDone="handleDone"
+    <div v-else class="text-center q-my-lg">
+      <q-spinner
+        color="primary"
+        size="2em"
       />
+      cargando...
     </div>
-
-    <q-btn
-      color="teal"
-      class="q-mt-md q-mr-sm"
-      icon="arrow_drop_down"
-      label="Más resultados"
-      @click="loadBlock"
-    />
-    <q-btn
-      color="pink"
-      class="q-mt-md q-mr-sm"
-      icon="refresh"
-      label="Reset"
-      @click="resetBlock"
-    />
-
   </div>
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
-import Pacientes from 'components/admin/Pacientes.vue'
+  import { date } from 'quasar'
+  import { mapGetters } from 'vuex'
+  import Pacientes from 'components/admin/Pacientes.vue'
 
-export default {
-  components: { Pacientes },
-  mounted(){
-    this.resetBlock()
-  },
-  computed: {
-    ...mapGetters(['pacientes', 'getPacientesByName', 'getPacientesByDate']),
-  },
-  methods: {
-    async loadBlock() {
-      await this.$store.commit('pushPagination', {type: 'pacientes', qty: 3})
+  export default {
+    components: { Pacientes },
+    mounted(){
+      this.resetBlock()
     },
-    async resetBlock() {
-      await this.$store.commit('resetPagination')
-      await this.$store.commit('resetSearch')
-      await this.$store.commit('resetDate')
+    computed: {
+      ...mapGetters(['pacientes', 'getPacientesByName', 'getPacientesByRangeDate']),
     },
-    handleDone(id) {
-      // switch checkbox store pacientes.done
-      this.$store.commit('handleDone', id)
-    }
-  },
-}
+    methods: {
+      modalNewPatient(){
+        this.$store.commit('setModal', !this.$store.state.modal)
+        this.$store.commit('setForm', 'newPaciente')
+      },
+      loadBlock() {
+        this.$store.commit('pushPagination', {type: 'pacientes', qty: 3})
+      },
+      resetBlock() {
+        const today = new Date()
+        const first = new Date(today.getFullYear(), today.getMonth(), 1)
+        const last = new Date(today.getFullYear(), today.getMonth()+1, 0)
+        const getFormatDate = (time, format) => {
+          return date.formatDate(time, format, this.$store.state.localeEsp)
+        }
+        const _date = {
+          from: getFormatDate(first, 'DD/MM/YYYY'),
+          to: getFormatDate(last, 'DD/MM/YYYY'),
+        }
+        this.$store.commit('resetPagination')
+        this.$store.commit('resetSearch')
+        this.$store.commit('resetDate')
+        this.$store.commit('setDate', _date)
+      },
+      handleDone(type, id) {
+        // switch checkbox store pacientes.done
+        this.$store.commit('handleDone', {type, id})
+      },
+    },
+  }
 </script>

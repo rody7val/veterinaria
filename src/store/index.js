@@ -25,6 +25,7 @@ export default function (/* { ssrContext } */) {
     //modules: { clientes },
 
     state: {
+      title: 'CentralVet',
       drawer: false,
       drawerRight: false,
       modal: false,
@@ -39,9 +40,12 @@ export default function (/* { ssrContext } */) {
 
       typeView: '',
       toggle: false,
+      toggleDisabled: false,
       search: '',
       date: { from: '', to: '' },
       pagination: 3,
+      progress: 0,
+      slide: "",
 
       user: null,
 
@@ -75,6 +79,9 @@ export default function (/* { ssrContext } */) {
       toggleSearch(state, toggle) {
         state.toggle = toggle
       },
+      toggleDisabled(state, toggle) {
+        state.toggleDisabled = toggle
+      },
       //search
       setSearch(state, search) {
         state.search = search
@@ -86,6 +93,10 @@ export default function (/* { ssrContext } */) {
       //tab
       setTab(state, tab) {
         state.tab = tab
+      },
+      //title
+      setTitle(state, title) {
+        state.title = title
       },
       //drawer
       setDrawer(state, drawer) {
@@ -119,6 +130,12 @@ export default function (/* { ssrContext } */) {
       resetDate(state, date) {
         state.date = date
       },
+      setProgress(state, progress) {
+        state.progress = progress
+      },
+      setSlide(state, slide) {
+        state.slide = slide
+      },
       pushPagination(state, {type, qty}) {
         if(state.pagination + qty > Object.keys(state[type].data).length){
           state.pagination = Object.keys(state[type].data).length
@@ -130,7 +147,6 @@ export default function (/* { ssrContext } */) {
     getters: {
       //clientes
       clientes: state => {//order by name
-        //ultimos
         return Object.values(state.clientes.data)
         .sort( ( a, b) => {
           return new Date(a.created_at.seconds*1000) - new Date(b.created_at.seconds*1000)
@@ -167,9 +183,9 @@ export default function (/* { ssrContext } */) {
         .slice(0)
         .slice(-state.pagination).reverse()
       },
+
       //pacientes
       pacientes: state => {
-        //ultimos 7
         return Object.values(state.pacientes.data)
         .slice(0)
         .slice(-state.pagination).reverse()
@@ -183,17 +199,54 @@ export default function (/* { ssrContext } */) {
         .slice(0)
         .slice(-state.pagination).reverse()
       },
-      getPacientesByDate: (state) => {
-        return Object.values(state.pacientes.data).filter((item, index) => {
-          let date = new Date(item.created_at.seconds*1000)
-          let from = new Date(state.date.from.split("/").reverse().join("/"))
-          let to = new Date(state.date.to.split("/").reverse().join("/"))
-          return date >= from && date <= to
+      getPacientesByRangeDate: (state) => {//order by created_at
+        return Object.values(state.pacientes.data)
+        .filter((item, index) => {
+          if (state.date && state.date.from) {
+            let date = new Date(item.created_at.seconds*1000)
+            let from = new Date(state.date.from.split("/").reverse().join("/"))
+            let to = new Date(state.date.to.split("/").reverse().join("/"))
+            return date >= from && date <= to
+          }
+        })
+        .sort( ( a, b) => {
+          return new Date(a.created_at.seconds*1000) - new Date(b.created_at.seconds*1000)
         })
         .slice(0)
         .slice(-state.pagination).reverse()
       },
 
+      //entradas
+      entradas: state => {
+        return Object.values(state.entradas.data)
+        .slice(0)
+        .slice(-state.pagination).reverse()
+      },
+      getEntradasByName: (state) => {
+        return Object.values(state.entradas.data).filter(item => {
+          if (item.name) {
+            return item.name.toLowerCase().includes(state.search.toLowerCase())
+          }
+        })
+        .slice(0)
+        .slice(-state.pagination).reverse()
+      },
+      getEntradasByRangeDate: (state) => {//order by created_at
+        return Object.values(state.entradas.data)
+        .filter((item, index) => {
+          if (state.date && state.date.from) {
+            let date = new Date(item.created_at.seconds*1000)
+            let from = new Date(state.date.from.split("/").reverse().join("/"))
+            let to = new Date(state.date.to.split("/").reverse().join("/"))
+            return date >= from && date <= to
+          }
+        })
+        .sort( ( a, b) => {
+          return new Date(a.created_at.seconds*1000) - new Date(b.created_at.seconds*1000)
+        })
+        .slice(0)
+        .slice(-state.pagination).reverse()
+      },
     }
     // enable strict mode (adds overhead!)
     // for dev mode only

@@ -32,7 +32,7 @@
 
       <q-card-actions align="right" class="q-pl-none">
         <q-btn
-          color="teal"
+          color="primary"
           icon="arrow_drop_down"
           label="Más resultados"
           @click="loadBlock"
@@ -46,12 +46,11 @@
       </q-card-actions>
     </div>
 
-    <div v-else>
-      <q-spinner-clock
-        color="pink"
+    <div v-else class="text-center q-my-lg">
+      <q-spinner
+        color="primary"
         size="2em"
       />
-      <q-tooltip :offset="[0, 8]">QSpinnerClock</q-tooltip>
       cargando...
     </div>
   </div>
@@ -94,9 +93,9 @@
         this.$store.commit('resetDate')
         this.$store.commit('setDate', _date)
       },
-      handleDone(id) {
-        // switch checkbox store clientes.done
-        this.$store.commit('handleDone', id)
+      handleDone(type, id) {
+        // switch checkbox store pacientes.done
+        this.$store.commit('handleDone', {type, id})
       },
     },
   }

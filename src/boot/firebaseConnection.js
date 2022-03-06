@@ -1,7 +1,6 @@
-import Vue from 'vue'
 import firebase from '../services/firebase'
 import { date } from 'quasar'
- 
+
 export default async ({router, store}) => {
   //firebase.init(process.env.QENV.FIREBASE_CONFIG)
   // Tell the application what to do when the 

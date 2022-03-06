@@ -6,6 +6,7 @@
   "author": "",
   "private": true,
   "scripts": {
+    "build": "cross-env QENV=PROD quasar build",
     "dev": "cross-env QENV=DEV quasar dev",
     "test": "echo \"No test specified\" && exit 0"
   },
@@ -17,10 +18,12 @@
     "dygraphs": "^2.1.0",
     "firebase": "^9.6.6",
     "quasar": "^1.0.0",
+    "v-viewer": "^1.6.4",
     "vuex-easy-firestore": "^1.37.0"
   },
   "devDependencies": {
-    "@quasar/app": "^2.0.0"
+    "@quasar/app": "^2.0.0",
+    "@quasar/quasar-app-extension-qzoom": "^1.0.0-alpha.7"
   },
   "browserslist": [
     "last 10 Chrome versions",

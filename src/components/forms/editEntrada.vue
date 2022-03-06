@@ -8,28 +8,19 @@
 
     <form
       @submit.prevent="onSubmit"
-      @reset.prevent="onReset"
       class="q-gutter-md"
      >
       <q-card-section style="min-width: 350px">
         <!--desc-->
         <div class="text-overline">Descripción</div>
-          <!--:definitions="{
-            upload: {
-              tip: 'Subir imagen',
-              icon: 'photo',
-              handler: uploadIt
-            }
-          }"-->
         <q-editor
-          ref="editor"
-          v-model="$store.state.entradas.data[$store.state.entrada.id].desc"
-          :toolbar="[
-            ['bold', 'italic', 'strike', 'underline'],
-            //['upload']
-          ]"
-          content-class="bg-grey-4"
           :class="{'border-err': err}"
+          content-class="bg-grey-4"
+          v-model="$store.state.entradas.data[$store.state.entrada.id].desc"
+          ref="editor"
+          :toolbar="[
+            ['bold', 'italic', 'strike', 'underline']
+          ]"
         />
         <!--err-->
         <div class="q-pt-sm text-negative" v-if="err">
@@ -41,7 +32,6 @@
             class="q-ml-sm"
             label="CANCELAR"
             color="pink"
-            @click="onReset()"
             v-close-popup
           />
           <q-btn
@@ -66,18 +56,6 @@ export default {
     }
   },
   methods:{
-    /*uploadIt () {
-      const edit = this.$refs.editor
-      edit.caret.restore()
-      edit.runCmd('insertHTML', `<img src="https://cataas.com/cat/gif"/>`)
-      edit.focus()
-      this.$q.notify({
-        message: 'Server unavailable. Check connectivity.',
-        color: 'pink',
-        textColor: 'white',
-        icon: 'warning'
-      })
-    },*/
     onSubmit() {
       const desc = this.$store.state.entradas.data[this.$store.state.entrada.id].desc
       console.log(desc, typeof desc)
@@ -101,7 +79,6 @@ export default {
             message: 'Guardado'
           })
           //define modal
-          this.onReset()
           this.$store.commit('setModal', false)
         })
         .catch(err => {//handle error
@@ -114,16 +91,6 @@ export default {
         })
       }
     },
-
-    onReset() {
-      //this.$store.state.pacientes.data[this.$store.state.cliente.id].name = null
-      //this.$store.state.pacientes.data[this.$store.state.cliente.id].tel = null
-      //this.$store.state.pacientes.data[this.$store.state.cliente.id].dir = null
-
-      //this.$refs.name.resetValidation()
-      //this.$refs.dog.resetValidation()
-      //this.$refs.feme.resetValidation()
-    }
   },
 
   props: {
