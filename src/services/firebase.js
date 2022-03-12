@@ -58,9 +58,9 @@ const getAuth = () => {
   return firebase.auth
 }
 
-//const isAuthenticated = (store) => {
-//  return store.state.auth.isAuthenticated
-//}
+const isAuthenticated = (store) => {
+  return store.state.auth.isAuthenticated
+}
 
 //const handleOnAuthStateChanged = async (router, store, user) => {
 //  const initialAuthState = isAuthenticated(store)
@@ -103,11 +103,11 @@ const getAuth = () => {
 
 export default {
   firebase,
+  storage,
   init,
   auth,
-  getAuth,
-  storage,
-  //isAuthenticated,
+  isAuthenticated,
+  //getAuth,
   //handleOnAuthStateChanged,
   //ensureAuthIsInitialized
 }

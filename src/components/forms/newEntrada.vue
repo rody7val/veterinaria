@@ -10,7 +10,7 @@
       <form
         @submit.prevent="onSubmit"
         @reset.prevent="onReset"
-        style="min-width: 350px"
+        style="min-width: 330px"
        >
           <!--desc-->
           <div class="text-overline">Descripción</div>
@@ -20,15 +20,15 @@
             v-model="entry.desc"
             :toolbar="[
               ['bold', 'italic', 'strike', 'underline'],
-              ['upload']
+              //['upload']
             ]"
             :definitions="{
-              upload: {
-                tip: 'Subir archivo',
-                icon: 'cloud_upload',
-                label: 'FOTO/PDF',
-                handler: uploadIt
-              }
+              //upload: {
+              //  tip: 'Subir archivo',
+              //  icon: 'cloud_upload',
+              //  label: 'FOTO/PDF',
+              //  handler: uploadIt
+              //}
             }"
           />
     

@@ -38,7 +38,7 @@
           :key="link.title"
           v-bind="link"
         />
-        <EssentialLink
+        <EssentialLink v-if="$store.state.auth.isAuthenticated"
           v-for="link in adminLinks"
           :key="link.title"
           v-bind="link"

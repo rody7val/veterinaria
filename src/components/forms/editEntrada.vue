@@ -8,9 +8,9 @@
 
     <form
       @submit.prevent="onSubmit"
-      class="q-gutter-md"
+      style="min-width: 330px"
      >
-      <q-card-section style="min-width: 350px">
+      <q-card-section>
         <!--desc-->
         <div class="text-overline">Descripción</div>
         <q-editor
@@ -57,20 +57,18 @@ export default {
   },
   methods:{
     onSubmit() {
-      const desc = this.$store.state.entradas.data[this.$store.state.entrada.id].desc
-      console.log(desc, typeof desc)
-      if (desc == false) {
+      let entry = this.$store.state.entradas.data[this.$store.state.entrada.id]
+      delete entry.done
+
+      if (entry.desc == false) {
         this.formHasError = true
         this.err = true
       }
       else {
         this.err = false
-        //prepare date
         this.loading = true
-        const entry = this.$store.state.entradas.data[this.$store.state.entrada.id]
-        delete entry.done
         //sync
-        this.$store.dispatch('pacientes/set', entry)
+        this.$store.dispatch('entradas/patch', entry)
         .then(() => {//handle done
           this.loading = false
           this.$q.notify({

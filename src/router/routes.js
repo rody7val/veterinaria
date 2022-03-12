@@ -9,6 +9,7 @@ const routes = [
   },
   {
     path: '/admin',
+    meta: { requiresAuth: true },
     component: () => import('layouts/AdminLayout.vue'),
     children: [
       { path: '/admin', component: () => import('pages/admin/Dash.vue') },

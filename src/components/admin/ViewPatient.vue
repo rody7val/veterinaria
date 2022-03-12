@@ -99,10 +99,13 @@
         />
       </q-card-actions>
 
-      <Entradas v-if="entradasView.length > 0"
-        :entradas="entradasView"
-        :handleDone="handleDoneEntradas"
-      />
+      <div v-if="Object.keys($store.state.entradas.data).length > 0">
+        <Entradas v-if="entradasView.length > 0"
+          :entradas="entradasView"
+          :handleDone="handleDoneEntradas"
+        />
+        <div v-else class="q-mx-md">Sin resultados</div>
+      </div>
       <div v-else class="text-center q-my-lg">
         <q-spinner
           color="primary"

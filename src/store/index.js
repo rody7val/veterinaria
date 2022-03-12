@@ -3,6 +3,7 @@ import Vuex from 'vuex'
 import VuexEasyFirestore from 'vuex-easy-firestore'
 import fb from '../services/firebase'
 
+import auth from './auth'
 import clientes from './clientes'
 import pacientes from './pacientes'
 import entradas from './entradas'
@@ -22,7 +23,7 @@ export default function (/* { ssrContext } */) {
   const Store = new Vuex.Store({
     plugins: [ easyFirestore ],
 
-    //modules: { clientes },
+    modules: { auth },
 
     state: {
       title: 'CentralVet',

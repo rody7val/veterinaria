@@ -9,9 +9,9 @@
     <form
       @submit.prevent="onSubmit"
       @reset.prevent="onReset"
-      class="q-gutter-md"
+      style="min-width: 330px"
      >
-      <q-card-section style="min-width: 350px">
+      <q-card-section>
         <!--name-->
         <q-input
           color="accent"
@@ -112,7 +112,7 @@ export default {
       else {
         //prepare date
         this.loading = true
-        const patient = this.$store.state.pacientes.data[this.$store.state.paciente.id]
+        let patient = this.$store.state.pacientes.data[this.$store.state.paciente.id]
         delete patient.done
         //sync
         this.$store.dispatch('pacientes/set', patient)

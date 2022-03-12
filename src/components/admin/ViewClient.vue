@@ -83,10 +83,14 @@
         />
       </q-card-actions>
 
-      <Pacientes v-if="pacientesView.length > 0"
-        :pacientes="pacientesView"
-        :handleDone="handleDonePacientes"
-      />
+      <div v-if="Object.keys($store.state.pacientes.data).length > 0">
+        <Pacientes v-if="pacientesView.length > 0"
+          :pacientes="pacientesView"
+          :handleDone="handleDonePacientes"
+        />
+        <div v-else class="q-mx-md">Sin resultados</div>
+      </div>
+
       <div v-else class="text-center q-my-lg">
         <q-spinner
           color="primary"

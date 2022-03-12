@@ -65,7 +65,6 @@
               color="accent"
               label="Nombre"
               filled
-              autofocus
             >
               <template v-slot:append>
                 <q-icon name="search" />

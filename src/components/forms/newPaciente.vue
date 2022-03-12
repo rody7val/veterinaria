@@ -9,9 +9,9 @@
     <form
       @submit.prevent="onSubmit"
       @reset.prevent="onReset"
-      class="q-gutter-md"
+      style="min-width: 330px"
      >
-      <q-card-section style="min-width: 350px">
+      <q-card-section>
         <!--name-->
         <q-input
           color="accent"

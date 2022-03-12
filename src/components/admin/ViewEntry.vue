@@ -81,56 +81,65 @@
       <div class="text-overline text-grey q-px-md">Archivos</div>
       <!--upload-->
       <UploadFile />
-      <!--list files
-      v-if="entradasView.length > 0"
-      -->
-      <q-carousel
-        v-model="$store.state.slide"
-        transition-prev="slide-right"
-        transition-next="slide-right"
-        infinite
-        swipeable
-        animated
-        control-color="white"
-        navigation
-        padding
-        arrows
-        height="300px"
-        class="shadow-1 rounded-borders"
-      >
-        <q-carousel-slide
-          v-for="(item, index) in $store.state.entrada.files"
-          :key="index"
-          :name="index"
-          :img-src="item.img"
-          infinity
+      <!--list files-->
+      <div v-if="$store.state.entradas && $store.state.entradas.data ? Object.keys($store.state.entradas.data).length > 0 : []">
+        <q-img
+          v-if="$store.state.entrada && $store.state.entrada.files && $store.state.entrada.files.length === 1"
+          :src="$store.state.entrada.files[0].img"
         />
-            <!--
-            <div class="text-center q-mt-md q-mr-md">
-              <q-btn
-                dense
-                @click="borrar(item.id)"
-                class="q-mb-sm"
-                color="transparent"
-                icon="delete"
-                size="md"
-                label="Borrar"
-              /><br>
-              <q-btn
-                dense
-                @click="ampliar()"
-                class="q-mb-sm"
-                color="transparent"
-                icon="photo"
-                size="md"
-                label="Ampliar"
-              /><br>
-            </div>
-          </q-carousel-slide>-->
-      </q-carousel>
-      <!--
-        class="column no-wrap flex-center"
-      -->
+        <q-carousel v-else-if="$store.state.entrada && $store.state.entrada.files && $store.state.entrada.files.length > 0"
+          v-model="$store.state.slide"
+          transition-prev="slide-right"
+          transition-next="slide-right"
+          infinite
+          swipeable
+          animated
+          control-color="white"
+          navigation
+          padding
+          arrows
+          height="300px"
+          class="shadow-1 rounded-borders"
+        >
+          <q-carousel-slide
+            v-for="(item, index) in $store.state.entrada.files"
+            :key="index"
+            :name="index"
+            :img-src="item.img"
+            infinity
+          />
+              <!--
+              <div class="text-center q-mt-md q-mr-md">
+                <q-btn
+                  dense
+                  @click="borrar(item.id)"
+                  class="q-mb-sm"
+                  color="transparent"
+                  icon="delete"
+                  size="md"
+                  label="Borrar"
+                /><br>
+                <q-btn
+                  dense
+                  @click="ampliar()"
+                  class="q-mb-sm"
+                  color="transparent"
+                  icon="photo"
+                  size="md"
+                  label="Ampliar"
+                /><br>
+              </div>
+            </q-carousel-slide>-->
+        </q-carousel>
+        <div v-else class="q-mx-md">Sin resultados</div>
+      </div>
+      <div v-else class="text-center q-my-lg">
+        <q-spinner
+          color="primary"
+          size="2em"
+        />
+        cargando...
+      </div>
     </q-list>
   </q-scroll-area>
 </template>
@@ -145,7 +154,7 @@ import UploadFile from 'components/forms/UploadFile.vue'
 export default {
   components: { Entradas, UploadFile },
   mounted() {
-    this.$store.commit("setSlide", this.$store.state.entrada.files.length-1)
+    this.$store.commit("setSlide", this.$store.state.entrada && this.$store.state.entrada.files ? this.$store.state.entrada.files.length-1 : 0)
   },
   methods:{
     getFormatDate(time, format) {

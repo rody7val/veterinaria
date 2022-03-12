@@ -6,6 +6,24 @@ export default async ({router, store}) => {
   // Tell the application what to do when the 
   // authentication state has changed
   firebase.auth().onAuthStateChanged((user) => {
+    const initialAuthState = firebase.isAuthenticated(store)
+    // Save to the store
+    store.commit('auth/setAuthState', {
+      isAuthenticated: user !== null,
+      user: user
+    })
+    //router.push({path: '/admin'})// And redirect
+    if (user && initialAuthState) console.log("is Auth")
+
+    // If the user loses authentication route
+    // them go to home
+    if (!user && initialAuthState) {
+      store.commit('auth/setAuthState', {
+        isAuthenticated: false,
+        user: false
+      })
+      router.push({ path: '/' })
+    }
     const today = new Date()
     const first = new Date(today.getFullYear(), today.getMonth(), 1)
     const last = new Date(today.getFullYear(), today.getMonth()+1, 0)
@@ -41,7 +59,4 @@ export default async ({router, store}) => {
     // close sync
     store.dispatch('clientes/closeDBChannel', { clearModule: true })
   })
-
-  //$q.$fb = fb
-  //store.$fb = fb
 }

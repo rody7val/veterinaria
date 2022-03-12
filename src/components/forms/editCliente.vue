@@ -7,11 +7,11 @@
     </q-card-section>
 
     <form
-      class="q-gutter-md"
       @submit.prevent="onSubmit"
       @reset.prevent="onReset"
+      style="min-width: 330px"
      >
-      <q-card-section style="min-width: 350px">
+      <q-card-section>
         <q-input
           ref="name"
           label="* Nombre"
@@ -80,7 +80,7 @@ export default {
       else {
         //prepare date
         this.loading = true
-        const client = this.$store.state.clientes.data[this.$store.state.cliente.id]
+        let client = this.$store.state.clientes.data[this.$store.state.cliente.id]
         delete client.done
         //sync
         this.$store.dispatch('clientes/set', client)
