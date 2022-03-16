@@ -7,23 +7,32 @@ export default async ({router, store}) => {
   // authentication state has changed
   firebase.auth().onAuthStateChanged((user) => {
     const initialAuthState = firebase.isAuthenticated(store)
-    // Save to the store
-    store.commit('auth/setAuthState', {
-      isAuthenticated: user !== null,
-      user: user
-    })
-    //router.push({path: '/admin'})// And redirect
-    if (user && initialAuthState) console.log("is Auth")
-
+    const redirect = router.history.current.query ? router.history.current.query.redirect : null
+    // Save user in store
+    if (user) {
+      store.commit('auth/setAuthState', {
+        isAuthenticated: user !== null,
+        user: user,
+        isAdmin: store.state.auth.admins.some(admin => admin === user.email)
+      })
+    }
+    //1st auth
+    if (user && initialAuthState) {
+      console.log("1st ", initialAuthState)
+    }
     // If the user loses authentication route
     // them go to home
     if (!user && initialAuthState) {
       store.commit('auth/setAuthState', {
         isAuthenticated: false,
-        user: false
+        user: false,
+        isAdmin: false
       })
       router.push({ path: '/' })
     }
+
+    if (redirect) router.push({ path: redirect })
+
     const today = new Date()
     const first = new Date(today.getFullYear(), today.getMonth(), 1)
     const last = new Date(today.getFullYear(), today.getMonth()+1, 0)

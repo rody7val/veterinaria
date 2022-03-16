@@ -7,9 +7,7 @@
       content-class="text-grey-10"
     >
       <q-list>
-        <q-item-label
-          header class="text-grey-8 q-pa-sm"
-        >
+        <q-item-label header class="text-grey-8 q-pa-sm">
           <q-toolbar>
             <q-avatar size="md" class="shadow-3 q-mr-md">
               <img src="../../assets/logo-central-vet.jpg">
@@ -31,15 +29,24 @@
             />
           </q-toolbar>
         </q-item-label>
+
         <q-separator />
 
+        <!--links public-->
         <EssentialLink
           v-for="link in sistemLinks"
           :key="link.title"
           v-bind="link"
         />
-        <EssentialLink v-if="$store.state.auth.isAuthenticated"
-          v-for="link in adminLinks"
+        <!--links auth/admins-->
+        <EssentialLink v-if="$store.state.auth.isAuthenticated && $store.state.auth.isAdmin"
+          v-for="link in authLinks.filter(item => item.onlyClient !== true)"
+          :key="link.title"
+          v-bind="link"
+        />
+        <!--links auth/clients-->
+        <EssentialLink v-if="$store.state.auth.isAuthenticated && !$store.state.auth.isAdmin"
+          v-for="link in authLinks.filter(item => item.admin !== true)"
           :key="link.title"
           v-bind="link"
         />
@@ -59,7 +66,7 @@ export default {
       type: Array,
       required: true
     },
-    adminLinks: {
+    authLinks: {
       type: Array,
       required: true
     },

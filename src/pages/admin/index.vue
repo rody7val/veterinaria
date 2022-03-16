@@ -4,7 +4,8 @@
     <div class="text-overline text-grey">
       <p>Panel de control</p>
     </div>
-    <div
+    
+    <div 
       class="text-overline text-center q-mr-md"
       style="max-width: 300px; display: inline-block"
     >

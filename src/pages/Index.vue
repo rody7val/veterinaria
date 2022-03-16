@@ -4,7 +4,7 @@
       <p>Página web</p><br>
     </div>
       <!--
-      {{$store.state.auth.isAuthenticated}}
+      {{$store.state.auth.isAdmin}}
       <pre>{{JSON.stringify($store.state.auth.user, null, 2)}}</pre>
       -->
   </div>

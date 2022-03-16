@@ -6,12 +6,12 @@
     >
       <q-item
         @click="handleDone('entradas', item.id)"
-        :class="{'done bg-purple-1': item.done}"
+        :class="`q-py-xs q-px-sm ${item.done ? 'done bg-purple-1' : ''}`"
         clickable
         v-ripple
       >
         <q-item-section avatar v-if="item.done">
-          <q-checkbox color="accent" v-model="item.done"/>
+          <q-checkbox size="md" color="accent" v-model="item.done"/>
         </q-item-section>
 
         <q-item-section avatar>
@@ -23,7 +23,14 @@
         </q-item-section>
 
         <q-item-section>
-          <q-item-label class="ellipsis" v-html="item.desc"> 
+          <q-item-label class="ellipsis">
+            <span class="text-grey-8 text-h5">
+              {{getItemById("pacientes", item.idPaciente).dog === "Perro" ? "🐶" : "🐱"}}
+            </span> {{"\n"}}
+            {{getItemById("pacientes", item.idPaciente).name}}
+          </q-item-label>
+          <q-item-label caption>
+            {{getItemById("clientes", item.idCliente).name}}
           </q-item-label>
         </q-item-section>
 
@@ -62,6 +69,9 @@ export default {
     getFormatDate(time, format) {
       return date.formatDate(time, format, this.$store.state.localeEsp)
     },
+    getItemById(type, id) {
+      return this.$store.state[type].data[id]
+    }
   },
 
   props: {

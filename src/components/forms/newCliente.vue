@@ -9,7 +9,7 @@
     <form
       @submit.prevent="onSubmit"
       @reset.prevent="onReset"
-      style="min-width: 330px"
+      style="min-width: 300px"
     >
       <q-card-section>
         <q-input

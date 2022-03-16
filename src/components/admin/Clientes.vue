@@ -6,7 +6,7 @@
     >
       <q-item
         @click="handleDone('clientes', item.id)"
-        :class="{'done bg-purple-1': item.done}"
+        :class="`q-py-xs q-px-sm ${item.done ? 'done bg-purple-1' : ''}`"
         clickable
         v-ripple
       >

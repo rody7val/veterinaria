@@ -1,24 +1,26 @@
 <template>
-  <q-item
-    clickable
-    tag="a"
-    :to="link"
-    :exact="exact"
-  >
-    <q-item-section
-      v-if="icon"
-      avatar
-    >
-      <q-icon color="grey-8" :name="icon" />
-    </q-item-section>
+  <div>
+      <q-item
+        :to="link"
+        :exact="exact"
+        clickable
+        tag="a"
+      >
+        <q-item-section
+          v-if="icon"
+          avatar
+        >
+          <q-icon color="grey-8" :name="icon" />
+        </q-item-section>
 
-    <q-item-section>
-      <q-item-label>{{ title }}</q-item-label>
-      <q-item-label caption v-if="caption">
-        {{ caption }}
-      </q-item-label>
-    </q-item-section>
-  </q-item>
+        <q-item-section>
+          <q-item-label>{{ title }}</q-item-label>
+          <q-item-label caption v-if="caption">
+            {{ caption }}
+          </q-item-label>
+        </q-item-section>
+      </q-item>
+  </div>
 </template>
 
 <script>
@@ -48,7 +50,18 @@ export default {
     icon: {
       type: String,
       default: ''
-    }
+    },
+
+    admin: {
+      type: Boolean,
+      default: false
+    },
+
+    onlyClient: {
+      type: Boolean,
+      default: false
+    },
+
   }
 }
 </script>

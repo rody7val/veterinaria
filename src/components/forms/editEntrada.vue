@@ -8,15 +8,16 @@
 
     <form
       @submit.prevent="onSubmit"
-      style="min-width: 330px"
+      style="min-width: 300px"
      >
       <q-card-section>
         <!--desc-->
         <div class="text-overline">Descripción</div>
         <q-editor
+          v-model="$store.state.entradas.data[$store.state.entrada.id].desc"
+          style="max-width: 300px!important"
           :class="{'border-err': err}"
           content-class="bg-grey-4"
-          v-model="$store.state.entradas.data[$store.state.entrada.id].desc"
           ref="editor"
           :toolbar="[
             ['bold', 'italic', 'strike', 'underline']

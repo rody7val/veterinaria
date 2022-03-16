@@ -1,7 +1,7 @@
 <template>
   <div class="_clinic">
     <q-splitter
-      :value="15"
+      :value="12"
       class="_splitter"
       :vertical="handleTabOrientationGtSm"
       :horizontal="!handleTabOrientationGtSm"
@@ -9,10 +9,11 @@
       <!--tabs /admin/clinic-->
       <template v-slot:before>
         <q-tabs
-          style="height: auto!important"
           v-model="$store.state.tab"
-          class="text-grey-8 bg-grey-3"
           :vertical="handleTabOrientationGtSm"
+          :horizontal="!handleTabOrientationGtSm"
+          style="height: auto!important"
+          class="text-grey-8 bg-grey-3"
         >
           <q-tab
             name="clientes"
@@ -110,10 +111,10 @@
               class="bg-grey-2"
               v-model="$store.state.tab"
               animated
-              swipeable
               vertical
-              transition-prev="jump-up"
-              transition-next="jump-up"
+              @touchstart.stop @mousedown.stop
+              :transition-prev="`slide-${!handleTabOrientationGtSm?'left':'up'}`"
+              :transition-next="`slide-${!handleTabOrientationGtSm?'right':'down'}`"
             >
               <q-tab-panel name="clientes">
                 <ClientesPage/>
@@ -145,6 +146,10 @@ export default {
     ClientesPage,
     PacientesPage,
     EntradasPage
+  },
+
+  mounted() {
+    this.$store.state.tab = "clientes"
   },
 
   computed: {

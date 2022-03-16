@@ -19,10 +19,16 @@
         </q-toolbar-title>
 
         <!--auth-->
+        <div v-if="$store.state.auth.load" class="text-center">
+          <q-spinner
+            color="white"
+            size="2em"
+          />
+        </div>
         <q-btn
+          v-else-if="$store.state.auth.isAuthenticated"
+          :label="$store.state.auth.user.displayName.split(' ')[0]"
           :size="handleSizeBtn"
-          v-if="$store.state.auth.isAuthenticated"
-          :label="$store.state.auth.user.displayName"
           icon="account_circle"
           dense
           flat
@@ -33,10 +39,7 @@
           >
             <q-list style="min-width: 100px">
               <q-item to="/my" clickable>
-                <q-item-section>Mi perfil</q-item-section>
-              </q-item>
-              <q-item to="/config" clickable>
-                <q-item-section>Configuración</q-item-section>
+                <q-item-section>Mis datos</q-item-section>
               </q-item>
               <q-separator />
               <q-item @click="signOut()" clickable>
@@ -71,10 +74,10 @@
     </q-header>
 
     <!--menu-->
-    <MenuAdmin
+    <MenuAdmin 
       :drawerHandler="drawerHandler"
       :sistemLinks="sistemLinks"
-      :adminLinks="adminLinks"
+      :authLinks="authLinks"
     />
 
     <!--drawerRight-->
@@ -178,26 +181,48 @@ import deleteEntrada from 'components/forms/deleteEntrada'
 
 const linksSistemList = [
   {
-    title: 'Web',
+    title: 'Home',
+    caption: 'Página web',
     icon: 'home',
     link: '/',
     exact: true
   }
 ]
 
-const linksAdminList = [
+const linksAuthList = [
   {
-    title: 'Panel de Control',
+    title: 'Dashboard',
+    caption: 'Panel de Control',
+    icon: 'dashboard',
+    link: '/client',
+    exact: true,
+    onlyClient: true
+  },
+  {
+    title: 'Dashboard',
+    caption: 'Panel de Control',
     icon: 'dashboard',
     link: '/admin',
-    exact: true
+    exact: true,
+    admin: true
   },
   {
-    title: 'Historia Clínica',
+    title: 'Clínica',
+    caption: 'Libreta electrónica',
     icon: 'local_hospital',
     link: '/admin/clinic',
-    exact: true
+    exact: true,
+    admin: true
   },
+  {
+    title: 'Libreta electrónica',
+    caption: 'Historia clínica',
+    icon: 'pets',
+    link: '/client/:idCliente',
+    exact: true,
+    onlyClient: true,
+    disabled: true
+  }
 ]
 
 export default {
@@ -285,7 +310,7 @@ export default {
     return {
       menu: false,
       sistemLinks: linksSistemList,
-      adminLinks: linksAdminList,
+      authLinks: linksAuthList,
     }
   }
 }

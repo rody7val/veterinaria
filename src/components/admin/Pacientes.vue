@@ -6,7 +6,7 @@
     >
       <q-item
         @click="handleDone('pacientes', item.id)"
-        :class="{'done bg-purple-1': item.done}"
+        :class="`q-py-xs q-px-sm ${item.done ? 'done bg-purple-1' : ''}`"
         clickable
         v-ripple
       >
@@ -15,13 +15,13 @@
         </q-item-section>
 
         <q-item-section avatar>
-          <div class="text-grey-8" style="font-size: 3rem">
-            {{item.dog === "Perro" ? "🐶" : "🐱"}}
-          </div>
+          <span class="text-grey-8 text-h3">{{item.dog === "Perro" ? "🐶" : "🐱"}}</span>
         </q-item-section>
 
         <q-item-section>
-          <q-item-label>{{item.name}}</q-item-label>
+          <q-item-label>
+            {{item.name}}
+          </q-item-label>
           <q-item-label caption class="ellipsis">
             {{item.dog}} - {{item.feme}}
           </q-item-label>

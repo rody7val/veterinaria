@@ -10,14 +10,15 @@
       <form
         @submit.prevent="onSubmit"
         @reset.prevent="onReset"
-        style="min-width: 330px"
+        style="min-width: 300px"
        >
           <!--desc-->
           <div class="text-overline">Descripción</div>
           <q-editor
-            :class="{'border-err': err}"
-            content-class="bg-grey-4"
             v-model="entry.desc"
+            :class="{'border-err': err}"
+            style="max-width: 300px!important"
+            content-class="bg-grey-4"
             :toolbar="[
               ['bold', 'italic', 'strike', 'underline'],
               //['upload']

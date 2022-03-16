@@ -29,13 +29,13 @@ export default function (/* { store, ssrContext } */) {
     if (to.matched.some(record => record.meta.requiresAuth)) {
       if (!firebase.auth().currentUser) {
         next({
-          path: '/',
+          path: '/auth',
           query: { redirect: to.fullPath }
         })
       } else {
         next()
       }
-    } else {
+    }  else {
       next()
     }
   })

@@ -1,4 +1,9 @@
 export default {
   isAuthenticated: null,
-  user: null
+  isAdmin: false,
+  user: null,
+  admins: [
+    "rod7val@gmail.com",
+    "guillerminapuente@gmail.com"
+   ]
 }
