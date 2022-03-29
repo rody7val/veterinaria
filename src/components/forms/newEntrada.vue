@@ -10,7 +10,7 @@
       <form
         @submit.prevent="onSubmit"
         @reset.prevent="onReset"
-        style="min-width: 300px"
+        style="min-width: 298px"
        >
           <!--desc-->
           <div class="text-overline">Descripción</div>

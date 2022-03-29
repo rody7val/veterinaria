@@ -70,7 +70,7 @@ export default {
       return date.formatDate(time, format, this.$store.state.localeEsp)
     },
     getItemById(type, id) {
-      return this.$store.state[type].data[id]
+      return this.$store.state[type] && this.$store.state[type].data ? this.$store.state[type].data[id] : {}
     }
   },
 

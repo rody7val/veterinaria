@@ -11,6 +11,13 @@
     "test": "echo \"No test specified\" && exit 0"
   },
   "dependencies": {
+    "@fullcalendar/bootstrap": "^5.10.1",
+    "@fullcalendar/core": "^5.10.1",
+    "@fullcalendar/daygrid": "^5.10.1",
+    "@fullcalendar/interaction": "^5.10.1",
+    "@fullcalendar/list": "^5.10.1",
+    "@fullcalendar/timegrid": "^5.10.1",
+    "@fullcalendar/vue": "^5.10.1",
     "@quasar/extras": "^1.0.0",
     "core-js": "^3.6.5",
     "cross-env": "^7.0.3",

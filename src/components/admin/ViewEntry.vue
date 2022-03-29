@@ -76,19 +76,17 @@
       <q-card-section v-html="$store.state.entrada.desc" />
     </div>
 
-    <!--files-->
+    <!--images-->
     <q-list>
-      <div class="text-overline text-grey q-px-md">Archivos</div>
+      <div class="text-overline text-grey q-px-md">Imágenes</div>
       <!--upload-->
       <UploadFile />
       <!--list files-->
       <div v-if="$store.state.entradas && $store.state.entradas.data ? Object.keys($store.state.entradas.data).length > 0 : []">
-        <q-img
-          v-if="$store.state.entrada && $store.state.entrada.files && $store.state.entrada.files.length === 1"
-          :src="$store.state.entrada.files[0].img"
-        />
-        <q-carousel v-else-if="$store.state.entrada && $store.state.entrada.files && $store.state.entrada.files.length > 0"
+        <q-carousel
+          v-if="$store.state.entrada && $store.state.entrada.files && $store.state.entrada.files.length >= 0"
           v-model="$store.state.slide"
+          :fullscreen.sync="$store.state.fullscreen"
           transition-prev="slide-right"
           transition-next="slide-right"
           infinite
@@ -97,7 +95,7 @@
           control-color="white"
           navigation
           padding
-          arrows
+          :arrows="$store.state.entrada && $store.state.entrada.files && $store.state.entrada.files.length === 1 ? false : true"
           height="300px"
           class="shadow-1 rounded-borders"
         >
@@ -108,28 +106,19 @@
             :img-src="item.img"
             infinity
           />
-              <!--
-              <div class="text-center q-mt-md q-mr-md">
-                <q-btn
-                  dense
-                  @click="borrar(item.id)"
-                  class="q-mb-sm"
-                  color="transparent"
-                  icon="delete"
-                  size="md"
-                  label="Borrar"
-                /><br>
-                <q-btn
-                  dense
-                  @click="ampliar()"
-                  class="q-mb-sm"
-                  color="transparent"
-                  icon="photo"
-                  size="md"
-                  label="Ampliar"
-                /><br>
-              </div>
-            </q-carousel-slide>-->
+          <template v-slot:control>
+            <q-carousel-control
+              position="bottom-right"
+              :offset="[18, 18]"
+            >
+              <q-btn
+                push round dense color="white" text-color="accent"
+                :icon="$store.state.fullscreen ? 'fullscreen_exit' : 'fullscreen'"
+                @click="$store.commit('setFullscreen', !$store.state.fullscreen)"
+              />
+            </q-carousel-control>
+          </template>
+
         </q-carousel>
         <div v-else class="q-mx-md">Sin resultados</div>
       </div>

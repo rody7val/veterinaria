@@ -3,6 +3,8 @@
       <q-item
         :to="link"
         :exact="exact"
+        v-ripple
+        active-class="bg-purple-1 text-purple"
         clickable
         tag="a"
       >
@@ -10,7 +12,7 @@
           v-if="icon"
           avatar
         >
-          <q-icon color="grey-8" :name="icon" />
+          <q-icon :name="icon" />
         </q-item-section>
 
         <q-item-section>
@@ -67,7 +69,7 @@ export default {
 </script>
 
 <style lang="css">
-.q-item.q-router-link--active {
+/*.q-item.q-router-link--active {
   color: #9c27b0;
-}
+}*/
 </style>

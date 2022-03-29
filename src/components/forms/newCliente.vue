@@ -18,7 +18,6 @@
           v-model="client.name"
           filled
           label="* Nombre"
-          lazy-rules
           :rules="[ val => val && val.length > 0 || 'Escribe algo']"
         />
         <q-input
@@ -27,7 +26,6 @@
           v-model="client.tel"
           filled
           label="* Teléfono"
-          lazy-rules
           :rules="[ 
             val => val && val.length > 0 || 'Escribe algo',
             val => typeof Number.isInteger(Number(val)) && val > 0 || 'Escribe un número'

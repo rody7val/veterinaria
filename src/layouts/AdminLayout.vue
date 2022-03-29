@@ -15,61 +15,63 @@
           :style="{'text-transform': !handleSizeTitle?'uppercase':''}"
           :class="{'text-subtitle1': !handleSizeTitle}"
         >
-          {{$store.state.title}}
+          {{$store.state.title}} 
         </q-toolbar-title>
 
         <!--auth-->
-        <div v-if="$store.state.auth.load" class="text-center">
+        <div v-if="!$store.state.auth.isAuthenticated && $store.state.auth.load" class="text-center">
           <q-spinner
             color="white"
             size="2em"
           />
         </div>
-        <q-btn
-          v-else-if="$store.state.auth.isAuthenticated"
-          :label="$store.state.auth.user.displayName.split(' ')[0]"
-          :size="handleSizeBtn"
-          icon="account_circle"
-          dense
-          flat
-        >
-          <q-menu
-            v-model="menu"
-            @click.prevent="menu = !menu"
+        <div v-else>
+          <q-btn
+            v-if="$store.state.auth.isAuthenticated"
+            :label="$store.state.auth.user.displayName.split(' ')[0]"
+            :size="handleSizeBtn"
+            icon="account_circle"
+            dense
+            flat
           >
-            <q-list style="min-width: 100px">
-              <q-item to="/my" clickable>
-                <q-item-section>Mis datos</q-item-section>
-              </q-item>
-              <q-separator />
-              <q-item @click="signOut()" clickable>
-                <q-item-section>Salir</q-item-section>
-              </q-item>
-            </q-list>
-          </q-menu>
+            <q-menu
+              v-model="menu"
+              @click.prevent="menu = !menu"
+            >
+              <q-list style="min-width: 100px">
+                <q-item active-class="bg-purple-1 text-accent" to="/my" clickable>
+                  <q-item-section>Mis datos</q-item-section>
+                </q-item>
+                <q-separator />
+                <q-item @click="signOut()" clickable>
+                  <q-item-section>Salir</q-item-section>
+                </q-item>
+              </q-list>
+            </q-menu>
 
-          <transition
-            appear
-            enter-active-class="animated fadeIn"
-            leave-active-class="animated fadeOut"
-          >
-            <q-icon
-              color="white"
-              :name="`arrow_${arrowHandler}`"
-            />
-            <!-- Wrapping only one DOM element, defined by QBtn -->
-          </transition>
-        </q-btn>
-        <q-btn
-          v-else
-          dense
-          size="md"
-          color="white"
-          class="text-grey-8"
-          icon="account_circle"
-          label="Acceder"
-          @click="signIn()"
-        />
+            <transition
+              appear
+              enter-active-class="animated fadeIn"
+              leave-active-class="animated fadeOut"
+            >
+              <q-icon
+                color="white"
+                :name="`arrow_${arrowHandler}`"
+              />
+              <!-- Wrapping only one DOM element, defined by QBtn -->
+            </transition>
+          </q-btn>
+          <q-btn
+            v-else
+            dense
+            size="md"
+            color="white"
+            class="text-grey-8"
+            icon="account_circle"
+            label="Acceder"
+            @click="signIn()"
+          />
+        </div>
       </q-toolbar>
     </q-header>
 
@@ -147,6 +149,7 @@
           v-if="$store.state.form === 'deleteEntrada'"
           title="Eliminar Entrada"
         />
+
       </q-card>
     </q-dialog>
 
@@ -160,7 +163,7 @@
 <script>
 import firebase from 'firebase/compat/app'
 import 'firebase/compat/auth'
-import EssentialLink from 'components/EssentialLink.vue'
+//import EssentialLink from 'components/EssentialLink.vue'
 import MenuAdmin from 'components/admin/MenuAdmin'
 //views colections
 import ViewClient from 'components/admin/ViewClient'
@@ -181,7 +184,7 @@ import deleteEntrada from 'components/forms/deleteEntrada'
 
 const linksSistemList = [
   {
-    title: 'Home',
+    title: 'Veterinaria',
     caption: 'Página web',
     icon: 'home',
     link: '/',
@@ -191,24 +194,32 @@ const linksSistemList = [
 
 const linksAuthList = [
   {
-    title: 'Dashboard',
-    caption: 'Panel de Control',
+    title: 'Panel de control',
+    caption: 'Dashboard',
     icon: 'dashboard',
     link: '/client',
     exact: true,
     onlyClient: true
   },
   {
-    title: 'Dashboard',
-    caption: 'Panel de Control',
+    title: 'Panel de control',
+    caption: 'Dashboard',
     icon: 'dashboard',
     link: '/admin',
     exact: true,
     admin: true
   },
   {
+    title: 'Calendario',
+    caption: 'Agenda',
+    icon: 'event_note',
+    link: '/calendar',
+    exact: true,
+    admin: true
+  },
+  {
     title: 'Clínica',
-    caption: 'Libreta electrónica',
+    caption: 'Historia clínica',
     icon: 'local_hospital',
     link: '/admin/clinic',
     exact: true,
@@ -239,7 +250,7 @@ export default {
     deletePaciente,
     newEntrada,
     editEntrada,
-    deleteEntrada
+    deleteEntrada,
   },
 
   methods: {
@@ -271,20 +282,27 @@ export default {
 
     //auth handler
     signIn () {
+      this.$store.commit('auth/setLoad', true)
       const provider = new firebase.auth.GoogleAuthProvider()
       firebase.auth().signInWithPopup(provider).then(result => {
         console.log('signIn!', result)
+        this.$store.commit('auth/setLoad', false)
         //this.$router.replace('/list')
       }).catch(error => {
-        alert(error)
+        console(error)
+        this.$store.commit('auth/setLoad', false)
       })
     },
     signOut () {
       firebase.auth().signOut().then(result => {
         console.log('signOut!', result)
+        // close sync
+        this.$store.dispatch('clientes/closeDBChannel', { clearModule: true })
+        this.$store.dispatch('pacientes/closeDBChannel', { clearModule: true })
+        this.$store.dispatch('entradas/closeDBChannel', { clearModule: true })
         //this.$router.replace('/')
       }).catch(error => {
-        alert(error)
+        console(error)
       })
     }
   },
@@ -308,6 +326,7 @@ export default {
 
   data () {
     return {
+      count: 0,
       menu: false,
       sistemLinks: linksSistemList,
       authLinks: linksAuthList,

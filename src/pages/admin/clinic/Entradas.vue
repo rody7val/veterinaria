@@ -6,7 +6,7 @@
       v-if="entradas.length > 0"
     >
       <q-btn
-        icon="person_add"
+        icon="add_circle"
         label="NUEVA ENTRADA"
         color="accent"
         @click="modalNewEntry()"
@@ -32,7 +32,7 @@
 
       <q-card-actions align="right" class="q-pl-none">
         <q-btn
-          color="primary"
+          color="teal"
           icon="arrow_drop_down"
           label="Más resultados"
           @click="loadBlock"
@@ -48,7 +48,7 @@
 
     <div v-else class="text-center q-my-lg">
       <q-spinner
-        color="primary"
+        color="accent"
         size="2em"
       />
       cargando...

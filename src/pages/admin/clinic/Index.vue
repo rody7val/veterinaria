@@ -14,6 +14,7 @@
           :horizontal="!handleTabOrientationGtSm"
           style="height: auto!important"
           class="text-grey-8 bg-grey-3"
+          dense
         >
           <q-tab
             name="clientes"
@@ -149,7 +150,11 @@ export default {
   },
 
   mounted() {
-    this.$store.state.tab = "clientes"
+    this.$store.commit("setTab", this.$store.state.tab || "clientes")
+  },
+
+  beforeDestroy() {
+    this.$store.commit("setTab", "")
   },
 
   computed: {
@@ -173,7 +178,7 @@ export default {
 
   data () {
     return {
-      tab: 'clientes',
+      tab: 'clienteses',
     }
   }
 }
@@ -202,6 +207,7 @@ export default {
   overflow: hidden;
 }
 .q-tab--active{
-  color: #9c27b0
+  color: #9c27b0;
+  background: #f3e5f5;
 }
 </style>

@@ -1,5 +1,5 @@
 <template>
-  <div class="q-px-lg q-pt-sm bg-white">
+  <div class="q-px-lg q-pt-sm bg-grey-3">
     <!--<div class="" id="graphdiv"></div>-->
     <div class="text-overline text-grey">
       <p>Mis mascotas</p>

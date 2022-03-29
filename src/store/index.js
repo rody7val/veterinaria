@@ -7,12 +7,13 @@ import auth from './auth'
 import clientes from './clientes'
 import pacientes from './pacientes'
 import entradas from './entradas'
+import eventos from './eventos'
 
 Vue.use(Vuex)
 
 // do the magic 🧙🏻‍♂️
 const easyFirestore = VuexEasyFirestore(
-  [clientes, pacientes, entradas],
+  [clientes, pacientes, entradas, eventos],
   {logging: true, FirebaseDependency: fb.firebase}
 )
 
@@ -30,14 +31,18 @@ export default function (/* { ssrContext } */) {
       drawer: false,
       drawerRight: false,
       modal: false,
+      modalEvents: false,
+      fullscreen: false,
       
       form: false,
       idEdit: '',
+      edit: false,
 
-      tab: 'clientes',
+      tab: '',
       cliente: null,
       paciente: null,
       entrada: null,
+      evento: null,
 
       typeView: '',
       toggle: false,
@@ -76,6 +81,9 @@ export default function (/* { ssrContext } */) {
       setEntrada(state, entrada) {
         state.entrada = entrada
       },
+      setEvento(state, evento) {
+        state.evento = evento
+      },
       //toggle
       toggleSearch(state, toggle) {
         state.toggle = toggle
@@ -110,21 +118,41 @@ export default function (/* { ssrContext } */) {
       setModal(state, modal) {
         state.modal = modal
       },
-      //form
-      setForm(state, form) {
-        state.form = form
+      //modalEvents
+      setModalEvents(state, modal) {
+        state.modalEvents = modal
+      },
+      //fullscreen
+      setFullscreen(state, fullscreen) {
+        state.fullscreen = fullscreen
       },
       //id Edit
       setIdEdit(state, id) {
         state.idEdit = id
       },
+      //is edit
+      setEdit(state, edit) {
+        state.edit = edit
+      },
       //handle done
       handleDone(state, {type, id}) {
         state[type].data[id].done = !state[type].data[id].done
       },
+      //lists
       resetPagination(state) {
         state.pagination = 3
       },
+      pushPagination(state, {type, qty}) {
+        if(state.pagination + qty > Object.keys(state[type].data).length){
+          state.pagination = Object.keys(state[type].data).length
+        }
+        state.pagination = state.pagination + qty
+      },
+      //form
+      setForm(state, form) {
+        state.form = form
+      },
+      //forms
       resetSearch(state) {
         state.search = ""
       },
@@ -134,15 +162,10 @@ export default function (/* { ssrContext } */) {
       setProgress(state, progress) {
         state.progress = progress
       },
+      //dash
       setSlide(state, slide) {
         state.slide = slide
       },
-      pushPagination(state, {type, qty}) {
-        if(state.pagination + qty > Object.keys(state[type].data).length){
-          state.pagination = Object.keys(state[type].data).length
-        }
-        state.pagination = state.pagination + qty
-      }
     },
 
     getters: {
@@ -248,7 +271,56 @@ export default function (/* { ssrContext } */) {
         .slice(0)
         .slice(-state.pagination).reverse()
       },
+
+      //eventos
+      eventos: state => {
+        return Object.values(state.eventos.data).length
+      },
+      getEventosByRangeDate: state => {//order by date
+        return Object.values(state.eventos.data)
+        .filter((item, index) => {
+          if (state.date && state.date.from) {
+            let date = new Date(item.start)
+            let from = new Date(state.date.from.split("/").reverse().join("/"))
+            let to = new Date(state.date.to.split("/").reverse().join("/"))
+            return date >= from && date <= to
+          }
+        })
+      },
+      getEventosByRangeDateOnlyPending: state => {//order by date
+        return Object.values(state.eventos.data)
+        .filter((item, index) => {
+          let date = new Date(item.start)
+          let now = new Date()
+          return item.task && date > now
+        })
+      },
+      //counts
+      getCountClientes: state => {
+        return Object.keys(state.clientes.data).length
+      },
+      getCountPacientes: state => {
+        return Object.keys(state.pacientes.data).length
+      },
+      getCountEntradas: state => {
+        return Object.keys(state.entradas.data).length
+      },
+      getCountEventos: state => {
+        return Object.values(state.eventos.data).filter((item, index) => {
+          let date = new Date(item.start)
+          let now = new Date()
+          return !item.task && date > now
+        }).length
+      },
+      getCountTareas: state => {
+        return Object.values(state.eventos.data).filter((item, index) => {
+          let date = new Date(item.start)
+          let now = new Date()
+          return item.task && date > now
+        }).length
+      },
     }
+
     // enable strict mode (adds overhead!)
     // for dev mode only
     //strict: process.env.DEBUGGING

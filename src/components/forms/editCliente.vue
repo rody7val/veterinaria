@@ -18,7 +18,6 @@
           color="accent"
           v-model="$store.state.clientes.data[$store.state.cliente.id].name"
           filled
-          lazy-rules
           :rules="[ val => val && val.length > 0 || 'Escribe algo']"
         />
         <q-input
@@ -27,7 +26,6 @@
           color="accent"
           v-model="$store.state.clientes.data[$store.state.cliente.id].tel"
           filled
-          lazy-rules
           :rules="[ 
             val => val && val.length > 0 || 'Escribe algo',
             val => typeof Number.isInteger(Number(val)) && val > 0 || 'Escribe un número'

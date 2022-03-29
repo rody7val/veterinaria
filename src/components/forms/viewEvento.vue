@@ -1,27 +1,28 @@
 <template>
-  <div>
+  <q-card>
     <q-card-section class="row items-center q-pb-none">
-      <div class="text-h6">{{title}}</div>
+      <div v-if="title" class="text-h6">{{title}}</div>
       <q-space />
       <q-btn icon="close" flat round dense v-close-popup />
     </q-card-section>
 
+    {{this.$store.state.evento}}
+    <!--
     <form
       @submit.prevent="onSubmit"
       @reset.prevent="onReset"
       style="min-width: 300px"
      >
       <q-card-section>
-        <!--name-->
         <q-input
           color="accent"
           ref="name"
           v-model="$store.state.pacientes.data[$store.state.paciente.id].name"
           filled
           label="* Nombre"
+          lazy-rules
           :rules="[ val => val && val.length > 0 || 'Escribe algo']"
         />
-        <!--dog-->
         <q-select
           color="accent" 
           v-model="$store.state.pacientes.data[$store.state.paciente.id].dog"
@@ -32,7 +33,6 @@
           required
           :rules="[ val => val && val.length > 0 || 'Seleccione algo' ]"
         />
-        <!--deme-->
         <q-select
           color="accent" 
           v-model="$store.state.pacientes.data[$store.state.paciente.id].feme"
@@ -43,7 +43,6 @@
           required
           :rules="[ val => val && val.length > 0 || 'Seleccione algo' ]"
         />
-        <!--birthday-->
         <q-input
           color="accent"
           label="Fecha de nacimiento"
@@ -89,7 +88,8 @@
         </q-card-actions>
       </q-card-section>
     </form>
-  </div>
+  -->
+  </q-card>
 </template>
 
 <script>
@@ -99,6 +99,7 @@ export default {
       loading: false
     }
   },
+/*
   methods:{
     onSubmit() {
       this.$refs.name.validate()
@@ -147,11 +148,11 @@ export default {
       this.$refs.feme.resetValidation()
     }
   },
-
+*/
   props: {
     title: {
       type: String,
-      required: true
+      default: false
     },
   },
 }

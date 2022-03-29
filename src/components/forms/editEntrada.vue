@@ -8,7 +8,7 @@
 
     <form
       @submit.prevent="onSubmit"
-      style="min-width: 300px"
+      style="min-width: 298px"
      >
       <q-card-section>
         <!--desc-->

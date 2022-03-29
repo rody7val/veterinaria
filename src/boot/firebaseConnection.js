@@ -8,18 +8,56 @@ export default async ({router, store}) => {
   firebase.auth().onAuthStateChanged((user) => {
     const initialAuthState = firebase.isAuthenticated(store)
     const redirect = router.history.current.query ? router.history.current.query.redirect : null
-    // Save user in store
+    store.commit('auth/setLoad', false)
+
+    if (redirect) {
+      router.push({ path: redirect || "/" })
+    }
+
     if (user) {
+      // Save user in store
       store.commit('auth/setAuthState', {
         isAuthenticated: user !== null,
+        isAdmin: store.state.auth.admins.some(admin => admin === user.email),
         user: user,
-        isAdmin: store.state.auth.admins.some(admin => admin === user.email)
       })
+      // calculate current month and year
+      const today = new Date()
+      const firstDay = new Date(today.getFullYear(), today.getMonth(), 1)
+      const lastDay = new Date(today.getFullYear(), today.getMonth()+1, 0)
+      const getFormatDate = (time, format) => {
+        return date.formatDate(time, format, store.state.localeEsp)
+      }
+      const _date = {
+        from: getFormatDate(firstDay, 'DD/MM/YYYY'),
+        to: getFormatDate(lastDay, 'DD/MM/YYYY'),
+      }
+      // sync firestoreDB
+      const name = ['name']
+      const created_at = ['created_at']
+      store.dispatch('clientes/openDBChannel', { clauses: {created_at} })
+      store.dispatch('pacientes/openDBChannel', { clauses: {name} })
+      store.dispatch('entradas/openDBChannel', { clauses: {created_at} })
+      store.dispatch('eventos/openDBChannel', { clauses: {created_at} })
+      // set default date
+      store.commit('setDate', _date)
+      // set charts
+      //Vue.use(VueDygraphs)
+
+      //public strict redirect
+      const publicStrict = router.history.current.meta
+        && router.history.current.meta.publicStrict
+          ? router.history.current.meta.publicStrict
+          : null
+      if (publicStrict) {
+        router.push({ path: "/" })
+      }
     }
     //1st auth
     if (user && initialAuthState) {
       console.log("1st ", initialAuthState)
     }
+
     // If the user loses authentication route
     // them go to home
     if (!user && initialAuthState) {
@@ -30,42 +68,11 @@ export default async ({router, store}) => {
       })
       router.push({ path: '/' })
     }
-
-    if (redirect) router.push({ path: redirect })
-
-    const today = new Date()
-    const first = new Date(today.getFullYear(), today.getMonth(), 1)
-    const last = new Date(today.getFullYear(), today.getMonth()+1, 0)
-    const getFormatDate = (time, format) => {
-      return date.formatDate(time, format, store.state.localeEsp)
-    }
-    const _date = {
-      from: getFormatDate(first, 'DD/MM/YYYY'),
-      to: getFormatDate(last, 'DD/MM/YYYY'),
-    }
-    // sync firestoreDB.clientes
-    const name = ['name']
-    const created_at = ['created_at']
-    store.dispatch('clientes/openDBChannel', { clauses: {created_at} })
-    store.dispatch('pacientes/openDBChannel', { clauses: {name} })
-    store.dispatch('entradas/openDBChannel', { clauses: {created_at} })
-    // set default date
-    store.commit('setDate', _date)
-    // set charts
-    //Vue.use(VueDygraphs)
-    //store.commit('auth/setAuthState', { user })
-    //store.commit('auth/setAdmin', { isAdmin: user.admin })
-    //store.state.user = user !== null
-    //store.state.user.admin = user.admin || null
-    //store.commit('auth/setAuthState', {
-    //  isAuthenticated: user !== null,
-    //  user: user
-    //})
-    //Vue.prototype.$user = user
-    //firebase.handleOnAuthStateChanged(router, store, user)
   }, (error) => {
     console.error(error)
     // close sync
     store.dispatch('clientes/closeDBChannel', { clearModule: true })
+    store.dispatch('pacientes/closeDBChannel', { clearModule: true })
+    store.dispatch('entradas/closeDBChannel', { clearModule: true })
   })
 }

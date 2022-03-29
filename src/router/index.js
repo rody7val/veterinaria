@@ -14,7 +14,7 @@ Vue.use(VueRouter)
  * with the Router instance.
  */
 
-export default function (/* { store, ssrContext } */) {
+export default function ({ store }/*ssrContext*/) {
   const Router = new VueRouter({
     scrollBehavior: () => ({ x: 0, y: 0 }),
     routes,
@@ -25,19 +25,43 @@ export default function (/* { store, ssrContext } */) {
     base: process.env.VUE_ROUTER_BASE
   })
 
+  //handler router
   Router.beforeEach((to, from, next) => {
-    if (to.matched.some(record => record.meta.requiresAuth)) {
-      if (!firebase.auth().currentUser) {
-        next({
+    if (!firebase.auth().currentUser) {
+      //auth strict
+      if ( to.matched.some(record => record.meta.requiresAuth) ){
+        return next({
           path: '/auth',
           query: { redirect: to.fullPath }
         })
-      } else {
-        next()
       }
-    }  else {
-      next()
+      //admin strict
+      if (to.matched.some(record => record.meta.adminStrict) ) {
+        return next({
+          path: '/auth',
+          query: { redirect: to.fullPath }
+        })
+      }
+      //public strict
+      if (to.matched.some(record => record.meta.publicStrict)) {
+        return next()
+      }
     }
+
+    //auth strict
+    if ( to.matched.some(record => record.meta.requiresAuth && store.state.auth.isAuthenticated) ){
+      return next()
+    }
+    //admin strict
+    if (to.matched.some(record => record.meta.adminStrict && store.state.auth.isAdmin) ) {
+      return next()
+    }
+    //public strict
+    if (to.matched.some(record => record.meta.publicStrict)) {
+      return next({ path: '/' })
+    }
+
+    next()
   })
 
   return Router

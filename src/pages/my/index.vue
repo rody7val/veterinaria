@@ -3,7 +3,7 @@
     <q-splitter
       :vertical="handleTabOrientationGtSm"
       :horizontal="!handleTabOrientationGtSm"
-      :value="15"
+      :value="12"
       class="_splitter"
     >
       <!--tabs /admin/clinic-->
@@ -14,6 +14,7 @@
           :horizontal="!handleTabOrientationGtSm"
           style="height: auto!important"
           class="text-grey-8 bg-grey-3"
+          dense
         >
           <q-tab
             name="user"
@@ -35,7 +36,6 @@
         <q-scroll-area style="height: 100%; max-width: 100%;">
 
           <div class="_search">
-          	
           </div>
 
         	<div class="_data">
@@ -77,7 +77,11 @@ export default {
   },
 
   mounted() {
-    this.$store.state.tab = "user"
+    this.$store.commit("setTab", this.$store.state.tab || "user")
+  },
+
+  beforeDestroy() {
+    this.$store.commit("setTab", "")
   },
 
   computed: {

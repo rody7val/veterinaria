@@ -11,18 +11,20 @@
       @reset.prevent="onReset"
       style="min-width: 300px"
      >
+      <!--name-->
       <q-card-section>
-        <!--name-->
         <q-input
           color="accent"
           ref="name"
           v-model="pacient.name"
           filled
           label="* Nombre"
-          lazy-rules
           :rules="[ val => val && val.length > 0 || 'Escribe algo']"
         />
-        <!--dog-->
+      </q-card-section>
+
+      <!--dog-->
+      <q-card-section>
         <q-select
           color="accent"
           v-model="pacient.dog"
@@ -33,7 +35,9 @@
           required
           :rules="[ val => val && val.length > 0 || 'Seleccione algo' ]"
         />
-        <!--feme-->
+      </q-card-section>
+      <!--feme-->
+      <q-card-section>
         <q-select
           color="accent"
           v-model="pacient.feme"
@@ -44,7 +48,9 @@
           required
           :rules="[ val => val && val.length > 0 || 'Seleccione algo' ]"
         />
-        <!--birthday-->
+      </q-card-section>
+      <!--birthday-->
+      <q-card-section>
         <q-input
           color="accent"
           filled
@@ -67,6 +73,7 @@
             </q-icon>
           </template>
         </q-input>
+      </q-card-section>
 
         <q-card-actions align="right">
           <q-btn
@@ -83,7 +90,6 @@
             type="submit"
           />
         </q-card-actions>
-      </q-card-section>
     </form>
   </div>
 </template>

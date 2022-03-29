@@ -1,16 +1,17 @@
 <template>
-  <div class="q-px-lg q-pt-sm bg-white">
+  <div class="q-px-lg q-pt-sm bg-grey-3">
     <!--<div class="" id="graphdiv"></div>-->
-    <div class="text-overline text-grey">
+    <div class="text-grey">
       <p>Panel de control</p>
     </div>
-    
+
+    <!--clinic-->
     <div 
-      class="text-overline text-center q-mr-md"
+      class="text-center q-mr-md"
       style="max-width: 300px; display: inline-block"
     >
       <q-carousel
-        v-model="slide"
+        v-model="slideClinic"
         transition-prev="slide-right"
         transition-next="slide-right"
         infinite
@@ -26,21 +27,21 @@
         <!--Clientes-->
         <q-carousel-slide name="face" class="column no-wrap flex-center">
           <q-icon name="face" size="56px" />
-          <div class="q-mt-md text-center">
-            <code>Clientes</code><br>
+          <div class="q-mt-md text-center text-body1">
+            Clientes<br>
             <div class="text-subtitle1">
               {{getCountClientes}}
             </div><br>
             <q-btn
               dense
-              @click="buscar('clientes')"
+              @click="searchClinic('clientes')"
               class="q-mb-sm"
               color="grey-8"
               icon="search"
               size="md"
               label="Buscar"
             /><br>
-            <q-btn
+            <!--<q-btn
               dense
               @click="crear('clientes', 'newCliente')"
               class="q-mb-sm"
@@ -48,20 +49,20 @@
               color="primary"
               size="md"
               label="Crear"
-            />
+            />-->
           </div>
         </q-carousel-slide>
         <!--Pacientes-->
         <q-carousel-slide name="pets" class="column no-wrap flex-center">
           <q-icon name="pets" size="56px" />
-          <div class="q-mt-md text-center">
-            <code>Pacientes</code><br>
+          <div class="q-mt-md text-center text-body1">
+            Pacientes<br>
             <div class="text-subtitle1">
               {{getCountPacientes}}
             </div><br>
             <q-btn
               dense
-              @click="buscar('pacientes')"
+              @click="searchClinic('pacientes')"
               class="q-mb-sm"
               color="grey-8"
               icon="search"
@@ -73,14 +74,74 @@
         <!--Entradas-->
         <q-carousel-slide name="assignment" class="column no-wrap flex-center">
           <q-icon name="assignment" size="56px" />
-          <div class="q-mt-md text-center">
-            <code>Entradas</code><br>
+          <div class="q-mt-md text-center text-body1">
+            Entradas<br>
             <div class="text-subtitle1">
               {{getCountEntradas}}
             </div><br>
             <q-btn
               dense
-              @click="buscar('entradas')"
+              @click="searchClinic('entradas')"
+              class="q-mb-sm"
+              color="grey-8"
+              icon="search"
+              size="md"
+              label="Buscar"
+            />
+          </div>
+        </q-carousel-slide>
+      </q-carousel>
+    </div>
+
+    <!--calendar-->
+    <div 
+      class="text-center q-mr-md"
+      style="max-width: 300px; display: inline-block"
+    >
+      <q-carousel
+        v-model="slideCalendar"
+        transition-prev="slide-right"
+        transition-next="slide-right"
+        infinite
+        swipeable
+        animated
+        control-color="white"
+        navigation
+        padding
+        arrows
+        height="300px"
+        class="bg-teal text-white shadow-1 rounded-borders"
+      >
+        <!--Eventos-->
+        <q-carousel-slide name="event" class="column no-wrap flex-center">
+          <q-icon name="event" size="56px" />
+          <div class="q-mt-md text-center text-body1">
+            Eventos pendientes<br>
+            <div class="text-subtitle1">
+              {{getCountEventos}}
+            </div><br>
+            <q-btn
+              dense
+              @click="$router.push('/calendar')"
+              class="q-mb-sm"
+              color="grey-8"
+              icon="search"
+              size="md"
+              label="Buscar"
+            /><br>
+          </div>
+        </q-carousel-slide>
+        <!--Tareas-->
+        <q-carousel-slide name="event_available" class="column no-wrap flex-center">
+          <q-icon name="event_available" size="56px" />
+          <div class="q-mt-md text-center text-subtitle1">
+            Tareas pendientes<br>
+            <div class="text-subtitleody1">
+              {{getCountTareas}}
+            </div><br>
+            <q-btn
+              dense
+              @click="$router.push('/calendar')"
               class="q-mb-sm"
               color="grey-8"
               icon="search"
@@ -96,6 +157,7 @@
 
 <script>
 //import dygraphs from 'dygraphs'
+import { /*mapState, mapActions,*/ mapGetters } from 'vuex'
 export default {
     /*new dygraphs("graphdiv",
       `Date,A,B
@@ -110,20 +172,18 @@ export default {
     )*/
   data() {
     return {
-      slide: "face"
+      slideClinic: "face",
+      slideCalendar: "event",
     }
   },
-
   computed: {
-    getCountClientes() {
-      return Object.keys(this.$store.state["clientes"].data).length
-    },
-    getCountPacientes() {
-      return Object.keys(this.$store.state["pacientes"].data).length
-    },
-    getCountEntradas() {
-      return Object.keys(this.$store.state["entradas"].data).length
-    },
+    ...mapGetters([
+      'getCountClientes',
+      'getCountPacientes',
+      'getCountEntradas',
+      'getCountEventos',
+      'getCountTareas',
+    ]),
   },
 
   methods: {
@@ -133,7 +193,7 @@ export default {
       this.$store.commit('setModal', true)
       this.$store.commit('setForm', type)
     },
-    buscar(tab){
+    searchClinic(tab){
       this.$router.push("/admin/clinic")
       this.$store.commit('setTab', tab)
     }
