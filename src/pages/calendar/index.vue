@@ -1,5 +1,5 @@
 <template>
-  <div >
+  <div>
     <div class="col-12 q-px-md bg-grey-3">
       <q-toggle
         v-model="$store.state.toggle"
@@ -11,7 +11,7 @@
       <!--search date-->
       <q-input
         ref="date"
-        style="max-width: 350px;"
+        style="max-width: 450px;"
         v-model="getDate"
         color="accent"
         label="Fecha"
@@ -44,33 +44,63 @@
           <q-chip dense>
             <q-avatar
               size="sm"
-              :color="`${getEventosByRangeDate.length > 0
+              :color="`${getEventosByRangeDate.filter(item=>!item.task).length > 0
                 ? 'teal'
                 : 'pink'
               }`"
               text-color="white"
-            >{{`${getEventosByRangeDate.length > 0
-              ? getEventosByRangeDate.length
+            >{{`${getEventosByRangeDate.filter(item=>!item.task).length > 0
+              ? getEventosByRangeDate.filter(item=>!item.task).length
               : 0
             }`}}</q-avatar>
-            Eventos
+            Turnos
           </q-chip>
+
+          <q-chip dense>
+            <q-avatar
+              size="sm"
+              :color="`${getEventosByRangeDate.filter(item=>item.task).length > 0
+                ? 'teal'
+                : 'pink'
+              }`"
+              text-color="white"
+            >{{`${getEventosByRangeDate.filter(item=>item.task).length > 0
+              ? getEventosByRangeDate.filter(item=>item.task).length
+              : 0
+            }`}}</q-avatar>
+            Tareas
+          </q-chip>          
         </template>
 
         <template v-else v-slot:after>
           <q-chip dense>
             <q-avatar
               size="sm"
-              :color="`${getEventosByRangeDateOnlyPending.length > 0
+              :color="`${getEventosByRangeDateOnlyPending.filter(item=>!item.task).length > 0
                 ? 'teal'
                 : 'pink'
               }`"
               text-color="white"
-            >{{`${getEventosByRangeDateOnlyPending.length > 0
-              ? getEventosByRangeDateOnlyPending.length
+            >{{`${getEventosByRangeDateOnlyPending.filter(item=>!item.task).length > 0
+              ? getEventosByRangeDateOnlyPending.filter(item=>!item.task).length
               : 0
             }`}}</q-avatar>
-            Eventos
+            Turnos
+          </q-chip>
+
+          <q-chip dense>
+            <q-avatar
+              size="sm"
+              :color="`${getEventosByRangeDateOnlyPending.filter(item=>item.task).length > 0
+                ? 'teal'
+                : 'pink'
+              }`"
+              text-color="white"
+            >{{`${getEventosByRangeDateOnlyPending.filter(item=>item.task).length > 0
+              ? getEventosByRangeDateOnlyPending.filter(item=>item.task).length 
+              : 0
+            }`}}</q-avatar>
+            Tareas
           </q-chip>
         </template>
       </q-input>
@@ -90,31 +120,25 @@
       </FullCalendar>
       <div v-else class="text-center q-mt-lg">Sin datos</div>
 
+      <!-- modals form -->
       <q-dialog v-model="$store.state.modalEvents">
-        <!--eventos-->
         <newEvento
-          v-if="$store.state.form === 'newEvento'"
+          v-if="$store.state.formEvents === 'newEvento'"
           :fullCalendar="$refs.fullCalendar"
           title="Nuevo Evento"
         />
+      </q-dialog>
+
+      <!-- modals confirm -->
+      <q-dialog v-model="$store.state.modal">
         <deleteEvento
           v-if="$store.state.form === 'deleteEvento'"
           :fullCalendar="$refs.fullCalendar"
           title="Eliminar Evento"
         />
-        <!--
-        <editEvento
-          v-if="$store.state.form === 'editEvento'"
-          :fullCalendar="$refs.fullCalendar"
-          title="Editar Evento"
-        />
-        <viewEvento
-          v-if="$store.state.form === 'viewEvento'"
-          :fullCalendar="$refs.fullCalendar"
-        />
-        <pre>{{$store.state.evento}}</pre>-->
       </q-dialog>
     </div>
+    <div v-else-if="eventos"></div>
     <div v-else class="text-center q-my-lg">
       <q-spinner
         color="accent"
@@ -181,30 +205,8 @@ import newEvento from 'components/forms/newEvento'
 import deleteEvento from 'components/forms/deleteEvento'
 
 export default {
-  data(){
-    return {
-      //newEvent: false,
-      //viewEvent: false,
-      //isEdit: false,
-      /*event: {
-        id: '',
-        title: '',
-        task: false,
-        allDay: true,
-        date: '',
-        timeStart: '',
-        timeEnd: '',
-        start: '',
-        end: '',
-        desc: '',
-      },*/
-    }
-  },
-
   components: {
     newEvento,
-    //viewEvento,
-    //editEvento,
     deleteEvento,
     FullCalendar,
   },
@@ -214,8 +216,6 @@ export default {
     	'eventos',
     	'getEventosByRangeDate',
     	'getEventosByRangeDateOnlyPending',
-//      'getCountEventos',
-//      'getCountTareas',
     ]),
 
     config() {
@@ -291,6 +291,7 @@ export default {
   },
 
   methods: {
+    //promise constructor
     setEvent(payload) {
       return new Promise((resolve, reject) => {
         if (!payload) reject(false)
@@ -334,9 +335,9 @@ export default {
       this.setEvent(payload).then((evento) => {
         if (!evento) return false
         this.$refs.fullCalendar.getApi().addEvent(evento)
-        //view new form
+        //view new event form
         this.$store.commit('setModalEvents', !this.$store.state.modalEvents)
-        this.$store.commit('setForm', 'newEvento')
+        this.$store.commit('setFormEvents', 'newEvento')
         this.$store.commit('setEvento', evento)
       })
     },
@@ -347,7 +348,7 @@ export default {
         //view/edit event form
         this.$store.commit('setEdit', true)
         this.$store.commit('setModalEvents', !this.$store.state.modalEvents)
-        this.$store.commit('setForm', 'newEvento')
+        this.$store.commit('setFormEvents', 'newEvento')
         this.$store.commit('setEvento', evento)
       })
     },
@@ -360,60 +361,6 @@ export default {
         end: new Date(payload.event.end).toISOString(),
         startStr: payload.event.startStr,
         endStr: payload.event.endStr
-      })
-    },
-    // save select
-    save() {
-      this.newEvent = false
-      this.$refs.fullCalendar.getApi().getEventById(this.event.id).remove()
-      this.$store.dispatch('eventos/set', this.event)
-    },
-    // back click
-    back() {
-      this.viewEvent = false
-      this.newEvent = false
-    },
-    // edit click
-    edit() {
-      this.viewEvent = false
-      this.newEvent = true
-      this.isEdit = true
-    },
-    // cancel select
-    cancel() {
-      this.$q.dialog({
-        title: 'Confirmar',
-        message: `¿Quieres descartar los cambios no guardados?`,
-        cancel: true,
-        persistent: true
-      }).onOk(() => {
-        this.newEvent = false
-        this.$refs.fullCalendar.getApi().getEventById(this.event.id).remove()
-      })
-    },
-    // cancel edit
-    cancelEdit() {
-      this.$q.dialog({
-        title: 'Confirmar',
-        message: `¿Quieres descartar los cambios no guardados?`,
-        cancel: true,
-        persistent: true
-      }).onOk(() => {
-        this.newEvent = false
-        this.isEdit = false
-      })
-    },
-    // delete select
-    borrar() {
-      this.$q.dialog({
-        title: 'Confirmar',
-        message: `¿Borrar?`,
-        cancel: true,
-        persistent: true
-      }).onOk(() => {
-        this.$store.dispatch('eventos/delete', this.event.id)
-        this.viewEvent = false
-        this.newEvent = false
       })
     },
   },

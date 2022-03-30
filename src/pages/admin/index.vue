@@ -112,25 +112,6 @@
         height="300px"
         class="bg-teal text-white shadow-1 rounded-borders"
       >
-        <!--Eventos-->
-        <q-carousel-slide name="event" class="column no-wrap flex-center">
-          <q-icon name="event" size="56px" />
-          <div class="q-mt-md text-center text-body1">
-            Eventos pendientes<br>
-            <div class="text-subtitle1">
-              {{getCountEventos}}
-            </div><br>
-            <q-btn
-              dense
-              @click="$router.push('/calendar')"
-              class="q-mb-sm"
-              color="grey-8"
-              icon="search"
-              size="md"
-              label="Buscar"
-            /><br>
-          </div>
-        </q-carousel-slide>
         <!--Tareas-->
         <q-carousel-slide name="event_available" class="column no-wrap flex-center">
           <q-icon name="event_available" size="56px" />
@@ -148,6 +129,25 @@
               size="md"
               label="Buscar"
             />
+          </div>
+        </q-carousel-slide>
+        <!--Eventos-->
+        <q-carousel-slide name="event" class="column no-wrap flex-center">
+          <q-icon name="event" size="56px" />
+          <div class="q-mt-md text-center text-body1">
+            Turnos pendientes<br>
+            <div class="text-subtitle1">
+              {{getCountEventos}}
+            </div><br>
+            <q-btn
+              dense
+              @click="$router.push('/calendar')"
+              class="q-mb-sm"
+              color="grey-8"
+              icon="search"
+              size="md"
+              label="Buscar"
+            /><br>
           </div>
         </q-carousel-slide>
       </q-carousel>

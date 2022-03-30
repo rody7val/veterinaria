@@ -35,6 +35,7 @@ export default function (/* { ssrContext } */) {
       fullscreen: false,
       
       form: false,
+      formEvents: false,
       idEdit: '',
       edit: false,
 
@@ -151,6 +152,10 @@ export default function (/* { ssrContext } */) {
       //form
       setForm(state, form) {
         state.form = form
+      },
+      //form events
+      setFormEvents(state, form) {
+        state.formEvents = form
       },
       //forms
       resetSearch(state) {

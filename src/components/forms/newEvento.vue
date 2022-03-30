@@ -88,6 +88,13 @@
           flat
         />
         <q-btn
+          v-if="$store.state.edit"
+          @click.prevent="viewDelete()"
+          color="pink"
+          label="Borrar"
+          flat
+        />
+        <q-btn
           @click.prevent="onSubmit"
           :loading="loading"
           color="accent"
@@ -104,12 +111,13 @@
 <script>
 export default {
   data() {
-    return{
+    return {
       loading: false,
       errTask: false,
       errAllDay: false,
     }
   },
+
   methods: {
     changeAllDay () {
       if (this.$store.state.evento.allDay) {
@@ -170,22 +178,22 @@ export default {
     },
 
     onReset() {
-      //this.$store.state.pacientes.data[this.$store.state.cliente.id].name = null
-      //this.$store.state.pacientes.data[this.$store.state.cliente.id].tel = null
-      //this.$store.state.pacientes.data[this.$store.state.cliente.id].dir = null
       if (this.$store.state.edit)
         this.$store.commit('setEdit', false)
       else
         this.fullCalendar.getApi().getEventById(this.$store.state.evento.id).remove()
-      this.$store.commit('setEvento', null)
       this.$store.commit('setModalEvents', false)
-      this.$store.commit('setForm', '')
+      this.$store.commit('setFormEvents', false)
+      this.$store.commit('setEvento', null)
       this.$refs.title.resetValidation()
-      console.log(this.fullCalendar.getApi())
-      //this.$refs.dog.resetValidation()
-      //this.$refs.feme.resetValidation()
-    }
+    },
+    
+    viewDelete() {
+      this.$store.commit('setModal', true)
+      this.$store.commit('setForm', 'deleteEvento')
+    },
   },
+
   props: {
     fullCalendar: {
       type: Object,
