@@ -1,6 +1,5 @@
 <template>
   <div class="text-center bg-white">
-    
     <div v-if="$store.state.auth.isAuthenticated" class="q-pt-sm bg-grey-3">
       <div class="text-overline text-grey q-pb-sm">Sesión</div>
       <q-avatar size="90px" class="q-mb-xs shadow-3">
@@ -19,7 +18,7 @@
         </small>
       </p>
 
-<div class="bg-grey-4 q-pb-lg">
+    <div class="bg-grey-4 q-pb-lg">
       <div class="text-overline text-grey q-pb-sm">Enlaces rápidos</div>
       <q-btn v-if="$store.state.auth.isAdmin"
         class="q-mx-xs q-mb-sm"
@@ -49,16 +48,8 @@
         color="accent"
         @click="$router.push('/my')"
       />
-      <q-btn
-        class="q-mx-xs q-mb-sm"
-        icon="pets"
-        label="Mis Mascotas"
-        color="accent"
-        @click="()=>{}"
-        disabled
-      />
-</div>
     </div>
+  </div>
 
     <div class="q-pt-sm q-pb-lg">
       <p class="text-overline text-grey">Veterinaria</p>
@@ -73,16 +64,15 @@
     <div class="q-pt-sm q-pb-md bg-grey-3">
       <p class="text-overline text-grey">Contacto</p>
       <div class="text-body1">
-        <p>📞 2923 405033</p>
-        <p>📱 +549 2923 464050</p>
-        <p>🏠 25 de Mayo 206, Pigüé</p>
-        <p>📍 Buenos Aires, Argentina</p>
+        <p>📱 {{$store.state.CEL}}</p>
+        <p>🏠 {{$store.state.DIR}}</p>
+        <p>📍 {{$store.state.LOCATION}}</p>
       </div>
       <div class="q-mt-xl">
-        <div class="text-caption">CentralVet</div>
+        <div class="text-caption">{{$store.state.title}}</div>
         <div class="text-caption">{{new Date().getFullYear()}}</div>
         <q-avatar size="xl" class="shadow-3 q-mt-xs">
-          <img src="../assets/logo-central-vet.jpg">
+          <img src="../assets/logo.jpg">
         </q-avatar>
       </div>
     </div>
@@ -101,14 +91,15 @@ const webcardsLinks = [
     title: 'TIENDA DE MASCOTAS',
     desc: 'Alimentos, farmacia y accesorios',
     images: [
-      'https://firebasestorage.googleapis.com/v0/b/historia-clinica-cvp.appspot.com/o/veterinaria.jpeg?alt=media&token=a314ccc7-56f3-40a2-bb99-760b970669a7',
+      'https://firebasestorage.googleapis.com/v0/b/historia-clinica-silvia.appspot.com/o/info%2Ffrente-1.jpg?alt=media&token=dc66d197-2bd5-4238-abd0-33684b37bd91',
+      'https://firebasestorage.googleapis.com/v0/b/historia-clinica-silvia.appspot.com/o/info%2Ffrente-2.jpg?alt=media&token=0dc154b2-6ebf-4eff-aea2-7a0955d68ea4',
     ]
   },
   {
     icon: 'local_hospital',
     title: 'CLINICA',
     desc: 'Consultas, vacunación, tratamientos e internación de pequeños animales 🐶 🐱 ',
-    chip: {sigla: 'M.V.', context: 'Guillermina Puente'},
+    chip: {sigla: 'M.V.', context: 'Silvia Cayssials'},
     images: [
       'https://firebasestorage.googleapis.com/v0/b/historia-clinica-cvp.appspot.com/o/img%2FCNPSJQlnHzEcLAhQpiDg%2F1623872615024.jpg?alt=media&token=8de514b1-6d02-4b24-b53c-109359013b36',
       'https://firebasestorage.googleapis.com/v0/b/historia-clinica-cvp.appspot.com/o/img%2FTmM6d3rBj7ILbdOTmyKk%2F1628633975487.jpg?alt=media&token=4f11ca97-4994-48e7-b828-33cc0884900b',
@@ -121,6 +112,10 @@ const webcardsLinks = [
     icon: 'content_cut',
     title: 'PELUQUERIA',
     desc: 'Baño y cortes caninos',
+    images: [
+      "https://firebasestorage.googleapis.com/v0/b/historia-clinica-silvia.appspot.com/o/info%2Fimg-1.jpg?alt=media&token=f446c257-86b5-4b4c-abd0-730a9891a5c3",
+      "https://firebasestorage.googleapis.com/v0/b/historia-clinica-silvia.appspot.com/o/info%2Fimg-2.jpg?alt=media&token=fcf5fc2a-d601-4851-81a9-7916d4055c75"
+    ]
   },
   {
     icon: 'science',

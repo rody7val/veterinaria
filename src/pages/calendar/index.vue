@@ -4,7 +4,7 @@
       <q-toggle
         v-model="$store.state.toggle"
         :icon="$store.state.toggle ? 'watch_later' : 'calendar_month'"
-        :label="$store.state.toggle ? 'Todo' : 'Solo pendiente'"
+        :label="$store.state.toggle ? 'Solo pendientes' : 'Todo'"
         color="accent"
         size="lg"
       />
@@ -106,9 +106,9 @@
       </q-input>
     </div>
     <!-- fullCalendar -->
-    <div class="col-12 q-pa-md bg-grey-2" v-if="eventos > 0">
+    <div class="col-12 q-pa-md bg-grey-2" v-if="eventos >= 0">
       <FullCalendar
-        v-if="getEventosByRangeDate.length > 0"
+        v-if="getEventosByRangeDate.length >= 0"
         ref="fullCalendar"
         class='demo-app-calendar'
         :options='config'
@@ -253,7 +253,7 @@ export default {
         selectMirror: true,
         dayMaxEvents: true,
         weekends: true,
-        //initialView: 'dayGridMonth',
+        initialView: 'timeGridWeek',
       }
     },
 

@@ -10,11 +10,11 @@
         <q-item-label header class="text-grey-8 q-pa-sm">
           <q-toolbar>
             <q-avatar size="md" class="shadow-3 q-mr-md">
-              <img src="../../assets/logo-central-vet.jpg">
+              <img src="../../assets/logo.jpg">
             </q-avatar>
             <div>
-              CentralVet<br>
-              <small class="text-grey-6">M.V. Guillermina Puente</small>
+              {{$store.state.title}}<br>
+              <small class="text-grey-6">M.V. {{$store.state.NAME}}</small>
             </div>
             <q-space/>
             <q-btn

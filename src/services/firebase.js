@@ -4,7 +4,8 @@ import 'firebase/compat/storage'
 import 'firebase/compat/firestore'
 
 const init = async (config) => {
-  firebase.initializeApp(config)
+  firebase.initializeApp(config);
+
   return new Promise((resolve, reject) => {
     firebase.firestore().enablePersistence()
       .then(resolve)

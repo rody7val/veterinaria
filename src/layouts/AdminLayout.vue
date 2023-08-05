@@ -289,7 +289,7 @@ export default {
         this.$store.commit('auth/setLoad', false)
         //this.$router.replace('/list')
       }).catch(error => {
-        console(error)
+        console.log(error)
         this.$store.commit('auth/setLoad', false)
       })
     },
@@ -302,7 +302,7 @@ export default {
         this.$store.dispatch('entradas/closeDBChannel', { clearModule: true })
         //this.$router.replace('/')
       }).catch(error => {
-        console(error)
+        console.log(error)
       })
     }
   },

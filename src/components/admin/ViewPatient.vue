@@ -52,7 +52,7 @@
       </q-item-section>
     </q-item>
 
-    <div class="q-px-lg"  v-if="$store.state.paciente.birthday">
+    <div class="q-px-lg" v-if="$store.state.paciente.birthday">
       <span class="text-grey-8">
         🎂 
       </span>
@@ -99,7 +99,7 @@
         />
       </q-card-actions>
 
-      <div v-if="Object.keys($store.state.entradas.data).length > 0">
+      <div v-if="Object.keys($store.state.entradas.data).length >= 0">
         <Entradas v-if="entradasView.length > 0"
           :entradas="entradasView"
           :handleDone="handleDoneEntradas"

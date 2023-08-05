@@ -19,6 +19,7 @@ module.exports = (QENV) => {
       storageBucket: ENV[`${QENV}_STORAGE_BUCKET`],
       messagingSenderId: ENV[`${QENV}_MESSAGING_SENDER_ID`],
       appId: ENV[`${QENV}_APP_ID`]
-    }
+    },
+    ADMINS: ENV[`${QENV}_ADMINS`].split(',')
   }
 }

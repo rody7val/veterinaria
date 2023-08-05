@@ -3,7 +3,6 @@
     <q-card-actions
       align="right"
       class="q-pl-none q-pt-none"
-      v-if="entradas.length > 0"
     >
       <q-btn
         icon="add_circle"
@@ -13,7 +12,7 @@
       />
     </q-card-actions>
 
-    <div v-if="entradas.length > 0">
+    <div v-if="entradas.length >= 0">
       <div v-if="!$store.state.toggle">
         <Entradas v-if="getEntradasByName.length > 0"
           :entradas="!$store.state.search ? entradas : getEntradasByName"

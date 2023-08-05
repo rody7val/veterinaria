@@ -83,7 +83,7 @@
         />
       </q-card-actions>
 
-      <div v-if="Object.keys($store.state.pacientes.data).length > 0">
+      <div v-if="Object.keys($store.state.pacientes.data).length >= 0">
         <Pacientes v-if="pacientesView.length > 0"
           :pacientes="pacientesView"
           :handleDone="handleDonePacientes"

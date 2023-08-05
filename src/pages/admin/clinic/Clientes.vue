@@ -3,7 +3,6 @@
     <q-card-actions
       align="right"
       class="q-pl-none q-pt-none"
-      v-if="clientes.length > 0"
     >
       <q-btn
         icon="person_add"
@@ -13,7 +12,7 @@
       />
     </q-card-actions>
 
-    <div v-if="clientes.length > 0">
+    <div v-if="clientes.length >= 0">
       <div v-if="!$store.state.toggle">
         <Clientes v-if="getClientesByName.length > 0"
           :clientes="!$store.state.search ? clientes : getClientesByName"

@@ -9,6 +9,9 @@ const enviromentConfiguration = require('./src/utils/environmentConfig.js')
 
 module.exports = function (/* ctx */) {
   return {
+    htmlVariables: {
+      title: "SC Veterinaria"
+    },
     // https://v1.quasar.dev/quasar-cli/supporting-ts
     supportTS: false,
 
@@ -116,8 +119,8 @@ module.exports = function (/* ctx */) {
       workboxPluginMode: 'GenerateSW', // 'GenerateSW' or 'InjectManifest'
       workboxOptions: {}, // only for GenerateSW
       manifest: {
-        name: `CentralVet`,
-        short_name: `CentralVet`,
+        name: `SC Veterinaria`,
+        short_name: `SC Veterinaria`,
         description: `Veterinaria`,
         display: 'standalone',
         orientation: 'portrait',

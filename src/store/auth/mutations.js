@@ -7,3 +7,7 @@ export function setAuthState (state, data) {
 export function setLoad (state, load) {
   state.load = load
 }
+
+export function setAdmins (state, admins) {
+  state.admins = Object.values(admins)
+}

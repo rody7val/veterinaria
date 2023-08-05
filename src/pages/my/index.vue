@@ -22,12 +22,15 @@
             label="Usuario"
           >
           </q-tab>
+
+          <!--
           <q-tab
             name="config"
             icon="tune"
             label="Config."
           >
           </q-tab>
+          -->
         </q-tabs>
       </template>
 
@@ -53,10 +56,12 @@
               <q-tab-panel class="q-pa-none" name="user">
                 <UserPage/>
               </q-tab-panel>
-
+              
+              <!--
               <q-tab-panel class="q-pa-none" name="config">
                 <ConfigPage/>
               </q-tab-panel>
+              -->
             </q-tab-panels>
           </div>
 
@@ -68,12 +73,12 @@
 
 <script>
 import UserPage from 'pages/my/User.vue'
-import ConfigPage from 'pages/my/Config.vue'
+//import ConfigPage from 'pages/my/Config.vue'
 
 export default {
   components: {
     UserPage,
-    ConfigPage
+    //ConfigPage
   },
 
   mounted() {

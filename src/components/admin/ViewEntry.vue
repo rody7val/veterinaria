@@ -82,7 +82,7 @@
       <!--upload-->
       <UploadFile />
       <!--list files-->
-      <div v-if="$store.state.entradas && $store.state.entradas.data ? Object.keys($store.state.entradas.data).length > 0 : []">
+      <div v-if="$store.state.entradas && $store.state.entradas.data ? Object.keys($store.state.entradas.data).length >= 0 : []">
         <q-carousel
           v-if="$store.state.entrada && $store.state.entrada.files && $store.state.entrada.files.length >= 0"
           v-model="$store.state.slide"
@@ -138,7 +138,7 @@ import { date } from 'quasar'
 import { mapGetters } from 'vuex'
 import EssentialLink from 'components/EssentialLink.vue'
 import Entradas from 'components/admin/Entradas.vue'
-import UploadFile from 'components/forms/UploadFile.vue'
+import UploadFile from 'components/forms/uploadFile'
 
 export default {
   components: { Entradas, UploadFile },

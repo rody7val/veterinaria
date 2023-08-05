@@ -17,7 +17,7 @@ const easyFirestore = VuexEasyFirestore(
   {logging: true, FirebaseDependency: fb.firebase}
 )
 
-//console.log(JSON.stringify(process.env.QENV.FIREBASE_CONFIG))
+// init db
 fb.init(process.env.QENV.FIREBASE_CONFIG)
 
 export default function (/* { ssrContext } */) {
@@ -27,7 +27,11 @@ export default function (/* { ssrContext } */) {
     modules: { auth },
 
     state: {
-      title: 'CentralVet',
+      title: 'SC Veterinaria',
+      NAME: 'Silvia Cayssials',
+      CEL: '2923643646',
+      DIR: 'AV. Mitre 790',
+      LOCATION: 'Pigüé, Buenos Aires, AR',
       drawer: false,
       drawerRight: false,
       modal: false,
@@ -46,7 +50,7 @@ export default function (/* { ssrContext } */) {
       evento: null,
 
       typeView: '',
-      toggle: false,
+      toggle: true,
       toggleDisabled: false,
       search: '',
       date: { from: '', to: '' },
@@ -297,7 +301,7 @@ export default function (/* { ssrContext } */) {
         .filter((item, index) => {
           let date = new Date(item.start)
           let now = new Date()
-          return item.task && date > now
+          return date > now
         })
       },
       //counts

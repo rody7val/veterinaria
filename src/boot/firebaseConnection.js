@@ -2,7 +2,9 @@ import firebase from '../services/firebase'
 import { date } from 'quasar'
 
 export default async ({router, store}) => {
-  //firebase.init(process.env.QENV.FIREBASE_CONFIG)
+  // set config
+  store.commit('auth/setAdmins', process.env.QENV.ADMINS)
+
   // Tell the application what to do when the 
   // authentication state has changed
   firebase.auth().onAuthStateChanged((user) => {
@@ -21,11 +23,12 @@ export default async ({router, store}) => {
         isAdmin: store.state.auth.admins.some(admin => admin === user.email),
         user: user,
       })
+
       // calculate current month and year
       const today = new Date()
       const firstDay = new Date(today.getFullYear(), today.getMonth(), 1)
       const lastDay = new Date(today.getFullYear(), today.getMonth()+1, 0)
-      const getFormatDate = (time, format) => {
+      function getFormatDate (time, format) {
         return date.formatDate(time, format, store.state.localeEsp)
       }
       const _date = {
@@ -68,6 +71,7 @@ export default async ({router, store}) => {
       })
       router.push({ path: '/' })
     }
+    return false
   }, (error) => {
     console.error(error)
     // close sync
